@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -120,6 +121,7 @@
     <Compile Include="Areas\ExampleManage\Controllers\SendMessagesController.cs" />
     <Compile Include="Areas\ExampleManage\Controllers\SignetController.cs" />
     <Compile Include="Areas\ExampleManage\ExampleManageAreaRegistration.cs" />
+    <Compile Include="Areas\Games\GamesController.cs" />
     <Compile Include="Areas\ReportManage\Controllers\EchartsController.cs" />
     <Compile Include="Areas\ReportManage\Controllers\HighchartsController.cs" />
     <Compile Include="Areas\ReportManage\ReportManageAreaRegistration.cs" />
@@ -377,6 +379,40 @@
     <Content Include="Content\js\zsign\jquery.zsign.css" />
     <Content Include="Content\js\zsign\jquery.zsign.js" />
     <Content Include="Content\js\zsign\signet.gif" />
+    <Content Include="GameContent\shenjingmao2\index.html" />
+    <Content Include="GameContent\shenjingmao2\static\images\arron.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\bg.jpg" />
+    <Content Include="GameContent\shenjingmao2\static\images\class.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\failed.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\friend.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\icon.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\logo.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\more.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\pot1.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\pot2.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\replay.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\share.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\shareBTN.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\stay.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\stay1.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\stay2.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\txt.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\victory.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\weizhu.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\weizhu1.png" />
+    <Content Include="GameContent\shenjingmao2\static\images\weizhu2.png" />
+    <Content Include="GameContent\shenjingmao2\static\js\common.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\description.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\egret_loader.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\game-min-07263.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\jquery.min.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\resource.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\stay.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\stay1.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\stay2.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\weizhu.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\weizhu1.js" />
+    <Content Include="GameContent\shenjingmao2\static\js\weizhu2.js" />
     <Content Include="Global.asax" />
     <Content Include="Index.htm" />
     <Content Include="Web.config" />
@@ -613,7 +649,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\SystemManage\Views\User\Info.cshtml" />
+    <Content Include="GameContent\shenjingmao2\说明.doc" />
     <None Include="Properties\PublishProfiles\NFine.Framework.Release.pubxml" />
+    <Content Include="Views\Games\Shenjingmao2.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
