@@ -62,6 +62,8 @@
     <Compile Include="SystemSecurity\DbBackupMap.cs" />
     <Compile Include="SystemSecurity\FilterIPMap.cs" />
     <Compile Include="SystemSecurity\LogMap.cs" />
+    <Compile Include="TGame\TGameLogMap.cs" />
+    <Compile Include="TGame\TGameMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NFine.Domain\NFine.Domain.csproj">
@@ -69,6 +71,7 @@
       <Name>NFine.Domain</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

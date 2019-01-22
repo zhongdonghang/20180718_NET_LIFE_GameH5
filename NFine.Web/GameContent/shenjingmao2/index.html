@@ -68,7 +68,7 @@
     function showme(){
         window.location.href="http://h5.gzlankong.com/";    //点击更多跳转地址
     }
-    function share(n , m){
+    function share(n, m) {
         if(m == 0){
             document.title = window.shareData.tTitle = "围住神经猫2-升级版-围住神经猫和他的好基友，你不来看看？"
         }
@@ -131,7 +131,7 @@
 		}
 	}
 
-	function dp_share(score){
+	function dp_share(score) {
 		if(myscore>0){
 			document.title = "抓住一只，又来一只，我用了"+score+"步围住神经猫和他的基友，玩过之后我整个人都精神了！你能超过我吗？"
 		}
@@ -159,7 +159,11 @@
 					}
 				}
 			}
-			function dp_submitScore(score){
+			function dp_submitScore(score) {
+			    alert(score);
+                
+			    location.href = "/Games/Shenjingmao2ResultHandle?score=" + score;
+
 				myscore=score;
 				
 			}

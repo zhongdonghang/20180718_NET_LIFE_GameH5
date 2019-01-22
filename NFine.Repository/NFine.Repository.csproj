@@ -53,6 +53,8 @@
     <Compile Include="SystemSecurity\DbBackupRepository.cs" />
     <Compile Include="SystemSecurity\FilterIPRepository.cs" />
     <Compile Include="SystemSecurity\LogRepository.cs" />
+    <Compile Include="TGame\TGameLogRepository.cs" />
+    <Compile Include="TGame\TGameRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NFine.Code\NFine.Code.csproj">

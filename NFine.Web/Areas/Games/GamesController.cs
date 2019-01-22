@@ -18,8 +18,35 @@ namespace NFine.Web.Areas.Games
 
         public ActionResult Shenjingmao2()
         {
-            return View();
+            if (Request.Params["loginID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+            else if (string.IsNullOrEmpty(Request.Params["loginID"]))
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+
+            Session["loginID"] = Request.Params["loginID"];
+            return new RedirectResult("/GameContent/shenjingmao2/index.html");
         }
 
+        public void Shenjingmao2ResultHandle()
+        {
+            if (Session["loginID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+            string scorc = Request.Params["score"];
+            string LBAccount = Session["loginID"].ToString();
+
+            //先判断玩家是否是第一次玩
+
+
+
+        }
     }
 }
