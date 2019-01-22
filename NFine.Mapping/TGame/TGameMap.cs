@@ -21,7 +21,7 @@ namespace NFine.Mapping.TGame
 		 public TGameMap()
         {
             this.ToTable("TGame");
-            this.HasKey(t => t.ID);
+            this.HasKey(t => t.F_Id);
         }
     }
 }

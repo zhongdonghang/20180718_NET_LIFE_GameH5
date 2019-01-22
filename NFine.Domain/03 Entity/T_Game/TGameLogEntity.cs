@@ -18,21 +18,28 @@ namespace NFine.Domain.Entity.TGameLog
     /// <summary>
     /// TGameLog Entity Model
     /// </summary>
-    public class TGameLogEntity : IEntity<TGameLogEntity>//, ICreationAudited, IDeleteAudited, IModificationAudited
+    public class TGameLogEntity : IEntity<TGameLogEntity>, ICreationAudited, IDeleteAudited, IModificationAudited
     {
-						public  Int32  ID { get; set; }
-					public  String  LBAccount { get; set; }
-					public  String  LogNo { get; set; }
-					public  Int32?  GameNo { get; set; }
-					public  Int32?  Score { get; set; }
-					public  Int32?  GameScore { get; set; }
-					public  Int32?  CoinType { get; set; }
-					public  Int32?  WinOrLost { get; set; }
-					public  Int32?  LogState { get; set; }
-					public  DateTime?  LogTime { get; set; }
-					public  Int32?  LogType { get; set; }
-					public  Int32?  LogFlag { get; set; }
-					public  String  Remark { get; set; }
-					public  DateTime?  MarkTime { get; set; }
-		    }
+        public String F_Id { get; set; }
+        public String F_LBAccount { get; set; }
+        public String F_LogNo { get; set; }
+        public Int32? F_GameNo { get; set; }
+        public Int32? F_Score { get; set; }
+        public Int32? F_GameScore { get; set; }
+        public Int32? F_CoinType { get; set; }
+        public Int32? F_WinOrLost { get; set; }
+        public Int32? F_LogState { get; set; }
+        public DateTime? F_LogTime { get; set; }
+        public Int32? F_LogType { get; set; }
+        public Int32? F_LogFlag { get; set; }
+        public String F_Remark { get; set; }
+        public DateTime? F_MarkTime { get; set; }
+        public String F_CreatorUserId { get; set; }
+        public DateTime? F_CreatorTime { get; set; }
+        public Boolean? F_DeleteMark { get; set; }
+        public String F_DeleteUserId { get; set; }
+        public DateTime? F_DeleteTime { get; set; }
+        public String F_LastModifyUserId { get; set; }
+        public DateTime? F_LastModifyTime { get; set; }
+    }
 }

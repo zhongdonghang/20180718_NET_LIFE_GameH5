@@ -20,5 +20,8 @@ namespace NFine.Domain.IRepository.TGameLog
 {
     public interface ITGameLogRepository : IRepositoryBase<TGameLogEntity>
     {
+         bool GetGameLogByAccount(string lbAccount);
+
+        int AddOne(TGameLogEntity entity);
     }
 }

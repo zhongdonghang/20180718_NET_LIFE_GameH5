@@ -8,6 +8,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using NFine.Data;
+using NFine.Data.Extensions;
 using NFine.Domain.Entity.TGameLog;
 using NFine.Domain.IRepository.TGameLog;
 //using NFine.Domain.Entity.H5Game;
@@ -22,6 +23,17 @@ namespace NFine.Repository.TGameLog
 {
     public class TGameLogRepository : RepositoryBase<TGameLogEntity>, ITGameLogRepository
     {
+        public int AddOne(TGameLogEntity entity)
+        {
+            throw new NotImplementedException();
+        }
 
+        public bool GetGameLogByAccount(string lbAccount)
+        {
+            string sql = "select count(F_Id) from T_GameLog where F_LBAccount='" + lbAccount + "' ";
+            object val  =  DbHelper.ExecuteScalar(sql);
+            int count = int.Parse(val.ToString());
+            return count>0;
+        }
     }
 }

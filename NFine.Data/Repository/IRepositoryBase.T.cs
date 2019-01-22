@@ -19,6 +19,8 @@ namespace NFine.Data
     /// <typeparam name="TEntity">实体类型</typeparam>
     public interface IRepositoryBase<TEntity> where TEntity : class,new()
     {
+       
+
         int Insert(TEntity entity);
         int Insert(List<TEntity> entitys);
         int Update(TEntity entity);

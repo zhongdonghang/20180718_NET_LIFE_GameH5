@@ -14,6 +14,20 @@ namespace NFine.Data.Extensions
     public class DbHelper
     {
         private static string connstring = ConfigurationManager.ConnectionStrings["NFineDbContext"].ConnectionString;
+
+        public static object ExecuteScalar(string cmdText)
+        {
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter[] commandParameters = null;
+            using (SqlConnection connection = new SqlConnection(connstring))
+            {
+                PrepareCommand(cmd, connection, null, CommandType.Text, cmdText, commandParameters);
+                object val = cmd.ExecuteScalar();
+                cmd.Parameters.Clear();
+                return val;
+            }
+        }
+
         public static int ExecuteSqlCommand(string cmdText)
         {
             using (DbConnection conn = new SqlConnection(connstring))

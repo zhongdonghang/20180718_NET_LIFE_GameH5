@@ -32,11 +32,9 @@ namespace NFine.Application.TGameLog
             return service.FindList(expression, pagination);
         }
 
-        public TGameLogEntity GetGameLogByAccount(string lbAccount)
+        public bool GetGameLogByAccount(string lbAccount)
         {
-            string sql = "select count(ID) from T_GameLog where LBAccount='"+ lbAccount + "' ";
-            //service.FindList(sql);
-            return null;
+            return service.GetGameLogByAccount(lbAccount);
         }
 
 
