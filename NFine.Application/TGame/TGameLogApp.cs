@@ -32,9 +32,20 @@ namespace NFine.Application.TGameLog
             return service.FindList(expression, pagination);
         }
 
+        /// <summary>
+        /// 游戏记录表是否存在指定账号的记录
+        /// </summary>
+        /// <param name="lbAccount"></param>
+        /// <returns></returns>
         public bool GetGameLogByAccount(string lbAccount)
         {
             return service.GetGameLogByAccount(lbAccount);
+        }
+
+        public TGameLogEntity GetMaxScoreByAccount(string lbAccount)
+        {
+
+            return null;
         }
 
 

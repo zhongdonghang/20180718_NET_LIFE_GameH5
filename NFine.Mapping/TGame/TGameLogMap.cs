@@ -22,7 +22,7 @@ namespace NFine.Mapping.TGameLog
     {
 		 public TGameLogMap()
         {
-            this.ToTable("TGameLog");
+            this.ToTable("T_GameLog");
             this.HasKey(t => t.F_Id);
         }
     }

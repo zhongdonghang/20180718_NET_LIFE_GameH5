@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html style="overflow: hidden;">
 <head>
-    <title>NFine快速开发平台</title>
+    <title>My Lifepay--H5小游戏管理平台</title>
     <link href="~/Content/css/framework-font.css" rel="stylesheet" />
     <script src="~/Content/js/jquery/jquery-2.1.1.min.js"></script>
     <script src="~/Content/js/bootstrap/bootstrap.js"></script>
@@ -19,7 +19,7 @@
     <div id="theme-wrapper">
         <header class="navbar" id="header-navbar">
             <div class="container" style="padding-right: 0px;">
-                <a href="#" id="logo" class="navbar-brand">NFine开发平台</a>
+                <a href="#" id="logo" class="navbar-brand">小游戏管理平台</a>
                 <div class="clearfix">
                     <div class="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
                         <ul class="nav navbar-nav pull-left">
@@ -30,7 +30,7 @@
                     </div>
                     <div class="nav-no-collapse pull-right" id="header-nav">
                         <ul class="nav navbar-nav pull-right">
-                            <li class="mobile-search">
+                            @*<li class="mobile-search">
                                 <a class="btn">
                                     <i class="fa fa-search"></i>
                                 </a>
@@ -42,8 +42,8 @@
                                         </div>
                                     </form>
                                 </div>
-                            </li>
-                            <li class="dropdown hidden-xs">
+                            </li>*@
+                            @*<li class="dropdown hidden-xs">
                                 <a class="btn dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-tasks"></i>
                                     <span class="count">5</span>
@@ -61,7 +61,7 @@
                                     <i class="fa fa-envelope-o"></i>
                                     <span class="count">16</span>
                                 </a>
-                            </li>
+                            </li>*@
                             <li class="dropdown profile-dropdown">
                                 <a href="#" class="dropdown" data-toggle="dropdown">
                                     <img src="~/Content/img/samples/scarlet-159.png" alt="" />
@@ -69,9 +69,9 @@
                                 </a>
                                 <ul class="dropdown-menu pull-right">
                                     <li><a class="menuItem" data-id="userInfo" href="/SystemManage/User/Info"><i class="fa fa-user"></i>个人信息</a></li>
-                                    <li><a href="javascript:void();"><i class="fa fa-inbox"></i>我的信箱</a></li>
+                                    @*<li><a href="javascript:void();"><i class="fa fa-inbox"></i>我的信箱</a></li>*@
                                     <li><a href="javascript:void();" onclick="layer.msg('浏览器缓存清除成功');"><i class="fa fa-trash-o"></i>清空缓存</a></li>
-                                    <li><a href="javascript:void();"><i class="fa fa-paint-brush"></i>皮肤设置</a></li>
+                                    @*<li><a href="javascript:void();"><i class="fa fa-paint-brush"></i>皮肤设置</a></li>*@
                                     <li class="divider"></li>
                                     <li><a href="~/Login/OutLogin"><i class="ace-icon fa fa-power-off"></i>安全退出</a></li>
                                 </ul>
@@ -99,7 +99,7 @@
                             </div>
                             <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li class="nav-header hidden-sm hidden-xs">常用菜单
+                                    @*<li class="nav-header hidden-sm hidden-xs">常用菜单
                                         <i class="fa fa-gear" style="color: #868b98; font-size: 12px; margin-top: -6px; position: absolute; right: 23px; top: 50%; cursor: pointer;"></i>
                                     </li>
                                     <li class="common">
@@ -125,7 +125,7 @@
                                             <i class="fa fa-star-o"></i>
                                             <span>客户</span>
                                         </a>
-                                    </li>
+                                    </li>*@
                                 </ul>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                         <nav class="page-tabs menuTabs">
                             <div class="page-tabs-content" style="margin-left: 0px;">
                                 <a href="javascript:;" class="menuTab active" data-id="/Home/Default">欢迎首页</a>
-                                <a href="javascript:;" class="menuTab" data-id="/Home/About" style="padding-right: 15px;">平台介绍</a>
+                                @*<a href="javascript:;" class="menuTab" data-id="/Home/About" style="padding-right: 15px;">平台介绍</a>*@
                             </div>
                         </nav>
                         <button class="roll-nav roll-right tabRight">

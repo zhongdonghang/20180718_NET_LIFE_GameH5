@@ -35,5 +35,15 @@ namespace NFine.Repository.TGameLog
             int count = int.Parse(val.ToString());
             return count>0;
         }
+
+        public TGameLogEntity GetMaxScoreByAccount(string lbAccount)
+        {
+            string sqlMaxScore = "select max(F_Score) from T_GameLog where F_LBAccount ='"+ lbAccount + "'";
+            string sqlLastScore = "select top 1 * from T_GameLog order by F_LogTime desc";
+
+
+
+            throw new NotImplementedException();
+        }
     }
 }
