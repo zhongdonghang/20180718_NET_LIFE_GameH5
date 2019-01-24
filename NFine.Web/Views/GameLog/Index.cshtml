@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+
+<script>
+    $(function () {
+        gridList();
+    })
+
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/GameLog/GetGridJson",
+            height: $(window).height() - 96,
+            colModel: [
+                { label: "主键", name: "F_Id", hidden: true, key: true },
+                { label: '会员', name: 'F_LBAccount', width: 150, align: 'left' },
+
+                {
+                    label: '游戏', name: 'F_GameNo', width: 150, align: 'left',
+                    formatter: function (cellvalue) {
+                        if (cellvalue == "1") {
+                            return "围住神经猫";
+                        }
+                    }
+                },
+
+                { label: 'LB/LoveBird分数', name: 'F_Score', width: 150, align: 'left' },
+                { label: '游戏分数', name: 'F_GameScore', width: 150, align: 'left' },
+
+                {
+                    label: '游戏', name: 'F_CoinType', width: 150, align: 'left',
+                    formatter: function (cellvalue) {
+                        if (cellvalue == "1") {
+                            return "LB积分";
+                        } else if (cellvalue == "2")
+                        {
+                            return "Love Bird积分";
+                        }
+                    }
+                },
+
+                {
+                    label: '游戏', name: 'F_WinOrLost', width: 150, align: 'left',
+                    formatter: function (cellvalue) {
+                        if (cellvalue == "1") {
+                            return "赢";
+                        } else if (cellvalue == "2") {
+                            return "输";
+                        }
+                    }
+                },
+                { label: '记录时间', name: 'F_LogTime', width: 150, align: 'left' },
+                { label: '备注', name: 'F_Remark', width: 300, align: 'left' }
+
+            ]
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: { keyword: $("#txt_keyword").val() },
+            }).trigger('reloadGrid');
+        });
+    }
+
+</script>
+
+<div class="gridPanel">
+    <table id="gridList"></table>
+</div>

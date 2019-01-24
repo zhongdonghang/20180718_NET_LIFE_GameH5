@@ -1,4 +1,4 @@
-﻿using NFine.Application.TGame;
+﻿using NFine.Application.TGameLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +8,11 @@ using NFine.Code;
 
 namespace NFine.Web.Areas.Games
 {
-    public class GameListController : ControllerBase
+    public class GameLogController : Controller
     {
         //
-        // GET: /Games/GameList/
-
-        TGameApp gameApp = new TGameApp();
+        // GET: /Games/GameLog/
+        TGameLogApp gameLogApp = new TGameLogApp();
 
         public ActionResult Index()
         {
@@ -24,7 +23,7 @@ namespace NFine.Web.Areas.Games
         [HandlerAjaxOnly]
         public ActionResult GetGridJson(string keyword)
         {
-            var data = gameApp.GetList(keyword);
+            var data = gameLogApp.GetList(keyword);
             return Content(data.ToJson());
         }
 

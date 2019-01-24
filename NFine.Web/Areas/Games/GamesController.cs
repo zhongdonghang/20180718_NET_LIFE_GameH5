@@ -30,7 +30,6 @@ namespace NFine.Web.Areas.Games
                 Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
                 Response.End();
             }
-
             Session["loginID"] = Request.Params["loginID"];
             return new RedirectResult("/GameContent/shenjingmao2/index.html");
         }

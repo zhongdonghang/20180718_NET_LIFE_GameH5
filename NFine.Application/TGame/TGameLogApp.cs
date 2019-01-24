@@ -20,7 +20,19 @@ namespace NFine.Application.TGameLog
     {
 		private ITGameLogRepository service = new TGameLogRepository();
 
-		public List<TGameLogEntity> GetList(Pagination pagination, string queryJson)
+        public List<TGameLogEntity> GetList(string keyword = "")
+        {
+            var expression = ExtLinq.True<TGameLogEntity>();
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                expression = expression.And(t => t.F_LBAccount.Contains(keyword));
+              //  expression = expression.Or(t => t.F_GameNo.Contains(keyword));
+            }
+            //expression = expression.And(t => t.F_Category == 1);
+            return service.IQueryable(expression).OrderBy(t => t.F_CreatorTime).ToList();
+        }
+
+        public List<TGameLogEntity> GetList(Pagination pagination, string queryJson)
         {
 		    var expression = ExtLinq.True<TGameLogEntity>();
             var queryParam = queryJson.ToJObject();

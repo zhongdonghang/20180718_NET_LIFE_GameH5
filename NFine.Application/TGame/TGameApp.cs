@@ -21,7 +21,19 @@ namespace NFine.Application.TGame
     {
 		private ITGameRepository service = new TGameRepository();
 
-		public List<TGameEntity> GetList(Pagination pagination, string queryJson)
+        public List<TGameEntity> GetList(string keyword = "")
+        {
+            var expression = ExtLinq.True<TGameEntity>();
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                expression = expression.And(t => t.F_CName.Contains(keyword));
+                expression = expression.Or(t => t.F_EName.Contains(keyword));
+            }
+            //expression = expression.And(t => t.F_Category == 1);
+            return service.IQueryable(expression).OrderBy(t => t.F_CreatorTime).ToList();
+        }
+
+        public List<TGameEntity> GetList(Pagination pagination, string queryJson)
         {
 		    var expression = ExtLinq.True<TGameEntity>();
             var queryParam = queryJson.ToJObject();

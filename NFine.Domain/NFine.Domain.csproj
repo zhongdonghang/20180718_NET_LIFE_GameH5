@@ -54,6 +54,7 @@
     <Compile Include="03 Entity\SystemSecurity\FilterIPEntity.cs" />
     <Compile Include="03 Entity\SystemSecurity\LogEntity.cs" />
     <Compile Include="02 ViewModel\AuthorizeActionModel.cs" />
+    <Compile Include="03 Entity\T_Game\SjmGameRegulation.cs" />
     <Compile Include="03 Entity\T_Game\TGameEntity.cs" />
     <Compile Include="03 Entity\T_Game\TGameLogEntity.cs" />
     <Compile Include="04 IRepository\SystemManage\IAreaRepository.cs" />
