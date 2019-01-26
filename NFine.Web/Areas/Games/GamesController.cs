@@ -49,6 +49,7 @@ namespace NFine.Web.Areas.Games
             if (app.GetGameLogByAccount(LBAccount))//不是第一次玩
             {
                 //取出历史最高分的记录
+
                 
                 //跟当前分数比，大于等于最高分，视为赢，赠送相应的积分,否则视为输
 
