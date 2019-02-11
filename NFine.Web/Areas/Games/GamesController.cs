@@ -30,7 +30,18 @@ namespace NFine.Web.Areas.Games
                 Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
                 Response.End();
             }
+            if (Request.Params["userID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+            else if (string.IsNullOrEmpty(Request.Params["userID"]))
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
             Session["loginID"] = Request.Params["loginID"];
+            Session["userID"] = Request.Params["userID"];
             return new RedirectResult("/GameContent/shenjingmao2/index.html");
         }
 
@@ -41,8 +52,15 @@ namespace NFine.Web.Areas.Games
                 Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
                 Response.End();
             }
+            if (Session["userID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+
             string scorc = Request.Params["score"];
             string LBAccount = Session["loginID"].ToString();
+            string userID = Session["userID"].ToString();
 
             //先判断玩家是否是第一次玩
             TGameLogApp app = new TGameLogApp();
@@ -60,7 +78,7 @@ namespace NFine.Web.Areas.Games
                 TGameLogEntity log = new TGameLogEntity();
                 log.F_Id = Guid.NewGuid().ToString();
                 log.F_LBAccount = LBAccount;
-                log.F_LogNo = "";
+                log.F_LogNo = userID;
                 log.F_GameNo = 1;
                 log.F_Score = int.Parse(scorc);
                 log.F_GameScore = int.Parse(scorc);

@@ -56,6 +56,7 @@ namespace NFine.Application.TGameLog
 
         public TGameLogEntity GetMaxScoreByAccount(string lbAccount)
         {
+            
 
             return null;
         }
