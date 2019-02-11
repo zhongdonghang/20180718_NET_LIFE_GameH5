@@ -48,7 +48,8 @@ CommonRank.prototype.gotoRank = function(type) {
 }
 
 // 提交成绩
-CommonRank.prototype.submit = function(score, scoreName, callback) {
+CommonRank.prototype.submit = function (score, scoreName, callback) {
+   // alert("abc");
 	if (!this.is9Guser) return;
 	$.ajax({
 		type: "GET",

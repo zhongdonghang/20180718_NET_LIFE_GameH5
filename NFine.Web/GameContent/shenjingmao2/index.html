@@ -56,7 +56,7 @@
 <script>var document_class = "GameApp";</script><!--这部分内容在编译时会被替换，要修改文档类，请到工程目录下的egretProperties.json内编辑。-->
 <script src="static/js/jquery.min.js?v=34234"></script>
 <script src="static/js/egret_loader.js"></script>
-<script src="static/js/game-min-07263.js"></script>
+<script src="static/js/game-min-07263.js?v=123"></script>
 
 <script>
     window.shareData = {
@@ -69,6 +69,7 @@
        // window.location.href="http://h5.gzlankong.com/";    //点击更多跳转地址
     }
     function share(n, m) {
+       
         if(m == 0){
             document.title = window.shareData.tTitle = "围住神经猫2-升级版-围住神经猫和他的好基友，你不来看看？"
         }
@@ -83,7 +84,8 @@
         $("#myfav").css("display","none");
     }
 
-    function hiddenMe(){
+    function hiddenMe() {
+       // alert("FFF");
         document.getElementById("sbg").className="sbg";
     }
 
@@ -91,7 +93,7 @@
 
 
 		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
-		    
+		  //  alert("222");
 		    WeixinJSBridge.on('menu:share:appmessage', function(argv) {
 		        WeixinJSBridge.invoke('sendAppMessage', {
 		            "img_url": window.shareData.imgUrl,
@@ -114,7 +116,7 @@
 		}, false);
 		
     egret_h5.startGame();
-
+    
 
     function entergame(){
         // 原来显示广告的代码
@@ -151,6 +153,7 @@
 			<script type="text/javascript">
 			var myCRdata = {};
 			var myCR = new CommonRank("sjm2");
+			
 			myCR.order="asc";
 			if (myCR.isWeixin()) {
 				if (myCR.check()) {
@@ -160,14 +163,17 @@
 				}
 			}
 			function dp_submitScore(score) {
-			  //  alert(score);
+			    // alert(score);
+			    myscore = score;
+			   // alert(myscore);
 			    location.href = "/Games/Shenjingmao2ResultHandle?score=" + score;
-				myscore=score;
+				
 				
 			}
 			function onShareComplete(res) {
-				
-	        }
+			   
+			}
+
 			</script>
 <div style="display:none">
 <!--这里填写统计代码-->

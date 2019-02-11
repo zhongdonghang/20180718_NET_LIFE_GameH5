@@ -54,11 +54,9 @@ namespace NFine.Application.TGameLog
             return service.GetGameLogByAccount(lbAccount);
         }
 
-        public TGameLogEntity GetMaxScoreByAccount(string lbAccount)
+        public double GetMaxScoreByAccount(string lbAccount, int F_CoinType)
         {
-            
-
-            return null;
+            return service.GetMaxScoreByAccount(lbAccount, F_CoinType);
         }
 
 

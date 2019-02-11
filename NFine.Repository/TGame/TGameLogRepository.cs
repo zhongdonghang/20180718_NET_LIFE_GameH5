@@ -1,12 +1,4 @@
-//-----------------------------------------------------------------------
-// <copyright file=" TGameLog.cs" company="NFine">
-// * Copyright (C) NFine.Framework  All Rights Reserved
-// * version : 1.0
-// * author  : NFine.Framework
-// * FileName: TGameLog.cs
-// * history : Created by T4 01/22/2019 15:08:31 
-// </copyright>
-//-----------------------------------------------------------------------
+
 using NFine.Data;
 using NFine.Data.Extensions;
 using NFine.Domain.Entity.TGameLog;
@@ -36,14 +28,12 @@ namespace NFine.Repository.TGameLog
             return count>0;
         }
 
-        public TGameLogEntity GetMaxScoreByAccount(string lbAccount)
+        public double GetMaxScoreByAccount(string lbAccount,int F_CoinType)
         {
-            string sqlMaxScore = "select max(F_Score) from T_GameLog where F_LBAccount ='"+ lbAccount + "'";
-            string sqlLastScore = "select top 1 * from T_GameLog order by F_LogTime desc";
+            string sqlMaxScore = "select max(F_Score) from T_GameLog where F_WinOrLost=1 and  F_CoinType=" + F_CoinType + " and  F_LBAccount ='" + lbAccount + "'";
+            double maxScore = double.Parse(DbHelper.ExecuteScalar(sqlMaxScore).ToString());
+            return maxScore;
 
-
-
-            throw new NotImplementedException();
         }
     }
 }
