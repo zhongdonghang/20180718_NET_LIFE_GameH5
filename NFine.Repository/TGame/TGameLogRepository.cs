@@ -20,18 +20,25 @@ namespace NFine.Repository.TGameLog
             throw new NotImplementedException();
         }
 
-        public bool GetGameLogByAccount(string lbAccount)
+        public bool GetGameLogByAccount(string lbAccount,string eName)
         {
-            string sql = "select count(F_Id) from T_GameLog where F_LBAccount='" + lbAccount + "' ";
+            string sql = "select count(F_Id) from T_GameLog where F_GameNo = '"+ eName + "' and  F_LBAccount='" + lbAccount + "' ";
             object val  =  DbHelper.ExecuteScalar(sql);
             int count = int.Parse(val.ToString());
             return count>0;
         }
 
-        public double GetMaxScoreByAccount(string lbAccount,int F_CoinType)
+        public double GetMaxScoreByAccount(string lbAccount,int F_CoinType,string eName)
         {
-            string sqlMaxScore = "select max(F_Score) from T_GameLog where F_WinOrLost=1 and  F_CoinType=" + F_CoinType + " and  F_LBAccount ='" + lbAccount + "'";
-            double maxScore = double.Parse(DbHelper.ExecuteScalar(sqlMaxScore).ToString());
+            string sqlMaxScore = "select max(F_Score) from T_GameLog where F_GameNo='"+eName+"' and  F_WinOrLost=1 and  F_CoinType=" + F_CoinType + " and  F_LBAccount ='" + lbAccount + "'";
+            double maxScore = 0;
+
+            if (!double.TryParse(DbHelper.ExecuteScalar(sqlMaxScore).ToString(), out maxScore))
+            {
+                maxScore = 0;
+            }
+
+
             return maxScore;
 
         }

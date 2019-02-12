@@ -381,6 +381,14 @@
     <Content Include="Content\js\zsign\jquery.zsign.css" />
     <Content Include="Content\js\zsign\jquery.zsign.js" />
     <Content Include="Content\js\zsign\signet.gif" />
+    <Content Include="GameContent\se\assets\css\m.css" />
+    <Content Include="GameContent\se\assets\img\find.logo.png" />
+    <Content Include="GameContent\se\assets\img\share.png" />
+    <Content Include="GameContent\se\assets\js\2main.min.js" />
+    <Content Include="GameContent\se\assets\js\libs.min.js" />
+    <Content Include="GameContent\se\assets\js\main.min.js" />
+    <Content Include="GameContent\se\icon.png" />
+    <Content Include="GameContent\se\index.html" />
     <Content Include="GameContent\shenjingmao2\index.html" />
     <Content Include="GameContent\shenjingmao2\static\images\arron.png" />
     <Content Include="GameContent\shenjingmao2\static\images\bg.jpg" />
@@ -415,6 +423,17 @@
     <Content Include="GameContent\shenjingmao2\static\js\weizhu.js" />
     <Content Include="GameContent\shenjingmao2\static\js\weizhu1.js" />
     <Content Include="GameContent\shenjingmao2\static\js\weizhu2.js" />
+    <Content Include="GameContent\xiaopingguo\1.mp3" />
+    <Content Include="GameContent\xiaopingguo\2.mp3" />
+    <Content Include="GameContent\xiaopingguo\2000.png" />
+    <Content Include="GameContent\xiaopingguo\3.mp3" />
+    <Content Include="GameContent\xiaopingguo\640.png" />
+    <Content Include="GameContent\xiaopingguo\88.png" />
+    <Content Include="GameContent\xiaopingguo\createjs.js" />
+    <Content Include="GameContent\xiaopingguo\download.gif" />
+    <Content Include="GameContent\xiaopingguo\index.html" />
+    <Content Include="GameContent\xiaopingguo\jquery.min.js" />
+    <Content Include="GameContent\xiaopingguo\l.png" />
     <Content Include="Global.asax" />
     <Content Include="Index.htm" />
     <Content Include="Web.config" />
@@ -652,6 +671,8 @@
   <ItemGroup>
     <Content Include="Areas\SystemManage\Views\User\Info.cshtml" />
     <Content Include="GameContent\shenjingmao2\说明.doc" />
+    <Content Include="GameContent\se\assets\img\Descr.WD3" />
+    <Content Include="GameContent\se\assets\js\Descr.WD3" />
     <None Include="Properties\PublishProfiles\NFine.Framework.Release.pubxml" />
     <Content Include="Views\Games\GameList.cshtml" />
     <Content Include="Views\GameList\Index.cshtml" />

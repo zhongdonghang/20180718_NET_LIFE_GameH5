@@ -49,14 +49,14 @@ namespace NFine.Application.TGameLog
         /// </summary>
         /// <param name="lbAccount"></param>
         /// <returns></returns>
-        public bool GetGameLogByAccount(string lbAccount)
+        public bool GetGameLogByAccount(string lbAccount,string eName)
         {
-            return service.GetGameLogByAccount(lbAccount);
+            return service.GetGameLogByAccount(lbAccount,eName);
         }
 
-        public double GetMaxScoreByAccount(string lbAccount, int F_CoinType)
+        public double GetMaxScoreByAccount(string lbAccount, int F_CoinType,string eName)
         {
-            return service.GetMaxScoreByAccount(lbAccount, F_CoinType);
+            return service.GetMaxScoreByAccount(lbAccount, F_CoinType, eName);
         }
 
 

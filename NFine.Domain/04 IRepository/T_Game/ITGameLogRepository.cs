@@ -20,9 +20,9 @@ namespace NFine.Domain.IRepository.TGameLog
 {
     public interface ITGameLogRepository : IRepositoryBase<TGameLogEntity>
     {
-        double GetMaxScoreByAccount(string lbAccount, int F_CoinType);
+        double GetMaxScoreByAccount(string lbAccount, int F_CoinType, string eName);
 
-         bool GetGameLogByAccount(string lbAccount);
+         bool GetGameLogByAccount(string lbAccount, string eName);
 
          int AddOne(TGameLogEntity entity);
     }

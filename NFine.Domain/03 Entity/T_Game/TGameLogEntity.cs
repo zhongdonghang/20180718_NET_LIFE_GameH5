@@ -23,7 +23,7 @@ namespace NFine.Domain.Entity.TGameLog
         public String F_Id { get; set; }
         public String F_LBAccount { get; set; }
         public String F_LogNo { get; set; }
-        public Int32? F_GameNo { get; set; }
+        public string F_GameNo { get; set; }
         public Int32? F_Score { get; set; }
         public Int32? F_GameScore { get; set; }
         public Int32? F_CoinType { get; set; }
