@@ -1,0 +1,128 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<style type="text/css">
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .tabbox {
+        margin: 10px;
+    }
+
+        .tabbox ul {
+            list-style: none;
+            display: table;
+        }
+
+            .tabbox ul li {
+                float: left;
+                width: 100px;
+                line-height: 30px;
+                padding-left: 8px;
+                border: 1px solid #aaccff;
+                margin-right: -1px;
+                cursor: pointer;
+            }
+
+                .tabbox ul li.active {
+                    background-color: #e73839;
+                    color: white;
+                    font-weight: bold;
+                }
+
+        .tabbox .content {
+            border: 1px solid #aaccff;
+            padding: 10px;
+        }
+
+            .tabbox .content > div {
+                display: none;
+            }
+
+                .tabbox .content > div.active {
+                    display: block;
+                }
+</style>
+
+<div class="tabbox">
+    <ul>
+        <li class="active">看看你有多色</li>
+        <li>消消看</li>
+        <li>扫雷</li>
+        <li>吃苹果</li>
+    </ul>
+    <div class="content">
+        <div class="active">
+            <div>
+                <form id="form1">
+                    <div class="mail-box">
+                        <div class="mail-header">看看你有多色设定</div>
+                        <div class="mail-body">
+                            <table  style="padding:10;">
+                                <tr>
+                                    <td >游戏名称 </td>
+                                    <td nowrap="nowrap">
+                                        <input id="txtGameName" name="txtGameName" style="width:300px;" type="text" class="form-control required" placeholder="输入游戏名称" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td >LB积分兑换规则 :</td>
+                                    <td  nowrap="nowrap">
+                                        1个LB积分兑换<input id="txtGameScoreForLB" name="txtGameScoreForLB" style="width:100px;" type="text" class="form-control required" placeholder="输入游戏积分" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td >LoveBird积分兑换规则 :</td>
+                                    <td nowrap="nowrap">
+                                            1个LoveBird积分兑换 <input id="txtGameScoreForLoveBird" name="txtGameScoreForLoveBird" style="width:100px;" type="text" class="form-control required" placeholder="输入游戏积分" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td >最低入场的LB积分数量 :</td>
+                                    <td nowrap="nowrap">
+                                       <input id="txtLowestPlayLBForSe" name="txtLowestPlayLBForSe" style="width:200px;" type="text" class="form-control required" placeholder="输入最低入场的LB积分数量" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td >最低入场的LoveBird积分数量 :</td>
+                                    <td nowrap="nowrap">
+                                        <input id="txtLowestPlayLoveBirdForSe" name="txtLowestPlayLoveBirdForSe" style="width:200px;" type="text" class="form-control required" placeholder="输入最低入场的LoveBird积分数量" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="mail-body" style="text-align: right;">
+                            <a href="javascript:void()" onclick="submitForm()" class="btn btn-primary" style="margin-right: 5px;"><i class="fa fa-reply"></i>发送</a>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+        <div>
+            <div>2222222222</div>
+        </div>
+        <div>33333333333</div>
+        <div>44444444</div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function ()
+{
+　　$(".tabbox li").click(function ()
+　　{
+　　　　//获取点击的元素给其添加样式，讲其兄弟元素的样式移除
+　　　　$(this).addClass("active").siblings().removeClass("active");
+　　　　//获取选中元素的下标
+　　　　var index = $(this).index();
+　　　　$(this).parent().siblings().children().eq(index).addClass("active")
+　　　　.siblings().removeClass("active");
+　　});
+});
+
+</script>

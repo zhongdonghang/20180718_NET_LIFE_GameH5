@@ -116,6 +116,7 @@
     <Compile Include="Web\Tree\TreeSelect.cs" />
     <Compile Include="Web\Tree\TreeSelectModel.cs" />
     <Compile Include="Web\WebHelper.cs" />
+    <Compile Include="WriteLog.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

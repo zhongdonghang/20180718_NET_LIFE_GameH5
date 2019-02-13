@@ -25,5 +25,15 @@ namespace NFine.Domain._03_Entity.T_Game.GameSetting
         /// LB积分和游戏分数比例，即1个LoveBird积分等于游戏的多少分数
         /// </summary>
         public double LoveBirdRatio { get; set; }
+
+        /// <summary>
+        /// 最低入場的LB積分數量
+        /// </summary>
+        public double LowestPlayLB { get; set; }
+
+        /// <summary>
+        /// 最低入场的LoveBird积分数量
+        /// </summary>
+        public double LowestPlayLoveBird { get; set; }
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="03 Entity\T_Game\GameSetting\SeSetting.cs" />
     <Compile Include="03 Entity\T_Game\GameSetting\SettingBase.cs" />
     <Compile Include="03 Entity\T_Game\GameSetting\Shenjingmao2Setting.cs" />
+    <Compile Include="03 Entity\T_Game\GameSetting\XXKSetting.cs" />
     <Compile Include="03 Entity\T_Game\SjmGameRegulation.cs" />
     <Compile Include="03 Entity\T_Game\TGameEntity.cs" />
     <Compile Include="03 Entity\T_Game\TGameLogEntity.cs" />

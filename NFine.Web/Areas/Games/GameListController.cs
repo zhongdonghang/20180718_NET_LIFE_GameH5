@@ -28,5 +28,10 @@ namespace NFine.Web.Areas.Games
             return Content(data.ToJson());
         }
 
+        public ActionResult GameSetting()
+        {
+            return View();
+        }
+
     }
 }

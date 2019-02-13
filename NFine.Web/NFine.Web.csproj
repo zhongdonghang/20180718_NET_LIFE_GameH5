@@ -434,6 +434,12 @@
     <Content Include="GameContent\xiaopingguo\index.html" />
     <Content Include="GameContent\xiaopingguo\jquery.min.js" />
     <Content Include="GameContent\xiaopingguo\l.png" />
+    <Content Include="GameContent\xxk1000\css\style1.css" />
+    <Content Include="GameContent\xxk1000\icon.png" />
+    <Content Include="GameContent\xxk1000\index.html" />
+    <Content Include="GameContent\xxk1000\js\play68.js" />
+    <Content Include="GameContent\xxk1000\js\play68_sdk.js" />
+    <Content Include="GameContent\xxk1000\js\wx.js" />
     <Content Include="Global.asax" />
     <Content Include="Index.htm" />
     <Content Include="Web.config" />
@@ -677,6 +683,7 @@
     <Content Include="Views\Games\GameList.cshtml" />
     <Content Include="Views\GameList\Index.cshtml" />
     <Content Include="Views\GameLog\Index.cshtml" />
+    <Content Include="Views\GameList\GameSetting.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

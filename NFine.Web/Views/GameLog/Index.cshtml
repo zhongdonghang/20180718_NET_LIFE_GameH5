@@ -20,8 +20,14 @@
                 {
                     label: '游戏', name: 'F_GameNo', width: 150, align: 'left',
                     formatter: function (cellvalue) {
-                        if (cellvalue == "1") {
+                        if (cellvalue == "sjm2") {
                             return "围住神经猫";
+                        }
+                        if (cellvalue == "se") {
+                            return "看你有多色";
+                        }
+                        if (cellvalue == "XXK") {
+                            return "消消看";
                         }
                     }
                 },
@@ -30,7 +36,7 @@
                 { label: '游戏分数', name: 'F_GameScore', width: 150, align: 'left' },
 
                 {
-                    label: '游戏', name: 'F_CoinType', width: 150, align: 'left',
+                    label: '积分类型', name: 'F_CoinType', width: 150, align: 'left',
                     formatter: function (cellvalue) {
                         if (cellvalue == "1") {
                             return "LB积分";
@@ -42,7 +48,7 @@
                 },
 
                 {
-                    label: '游戏', name: 'F_WinOrLost', width: 150, align: 'left',
+                    label: '游戏结果', name: 'F_WinOrLost', width: 150, align: 'left',
                     formatter: function (cellvalue) {
                         if (cellvalue == "1") {
                             return "赢";
