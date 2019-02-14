@@ -21,9 +21,6 @@ namespace NFine.Application.TGame
     {
 		private ITGameRepository service = new TGameRepository();
 
-
-        
-
         public List<TGameEntity> GetList(string keyword = "")
         {
             var expression = ExtLinq.True<TGameEntity>();

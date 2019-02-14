@@ -1,6 +1,9 @@
-﻿using NFine.Application;
+﻿using Newtonsoft.Json.Linq;
+using NFine.Application;
+using NFine.Application.TGame;
 using NFine.Application.TGameLog;
 using NFine.Domain._03_Entity.T_Game.GameSetting;
+using NFine.Domain.Entity.TGame;
 using NFine.Domain.Entity.TGameLog;
 using System;
 using System.Collections.Generic;
@@ -14,6 +17,8 @@ namespace NFine.Web.Areas.Games
     {
         //
         // GET: /Games/Games/
+
+        TGameApp gameApp = new TGameApp();
 
         public ActionResult Index()
         {
@@ -227,32 +232,33 @@ namespace NFine.Web.Areas.Games
                 Response.End();
             }
 
-
-
-
             Session["loginID"] = Request.Params["loginID"];
             Session["userID"] = Request.Params["userID"];
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
 
             //判断是不是有足够币来进行游戏
-            SeSetting setting = new SeSetting();
-            setting.LowestPlayLoveBird = 1000;
-            string coinType = "";
-            if (Session["LBOrLoveBird"].ToString() == "LB")
-            {
-                coinType = "2";
-            }else
-            {
-                coinType = "1";
-            }
+            TGameEntity entity = gameApp.GetForm("2");
+            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
 
-            bool isTrue = CommonTools.CheckPlayerCoinToGame(setting.LowestPlayLoveBird+"", Request.Params["userID"], coinType);
-            if (!isTrue)
+            bool isTrue = false;
+            if (Session["LBOrLoveBird"].ToString() == "LB")//用LB进行游戏
             {
-                Response.Write("<html><head><title>系统提示</title><script>alert('您的"+ Session["LBOrLoveBird"] + "余额不足，至少需要"+ setting.LowestPlayLoveBird + "个,请充值');</script></head><body></body></html>");
-                Response.End();
+                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
+                if (!isTrue)
+                {
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.End();
+                }
             }
-
+            else
+            {
+                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
+                if (!isTrue)
+                {
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.End();
+                }
+            }
             return new RedirectResult("/GameContent/se/index.html");
         }
 
@@ -282,6 +288,10 @@ namespace NFine.Web.Areas.Games
             //先判断玩家是否是第一次玩
             TGameLogApp app = new TGameLogApp();
             ///从数据库获取游戏设置
+
+            TGameEntity entity = gameApp.GetForm("2");
+            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
+
             SeSetting setting = new SeSetting();
             setting.GameName = "看看你有多色";
             setting.IsWinWithHighest = true;
@@ -292,8 +302,6 @@ namespace NFine.Web.Areas.Games
 
             if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
             if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
-
-           
 
             if (app.GetGameLogByAccount(LBAccount, "se"))//不是第一次玩
             {
@@ -327,8 +335,6 @@ namespace NFine.Web.Areas.Games
                     log.F_LastModifyTime = null;
                     app.SubmitForm(log, string.Empty);
 
-
-
                     //积分操作
                     if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting.GameName))
                     {
@@ -338,8 +344,6 @@ namespace NFine.Web.Areas.Games
                     {
                         ret = "网络错误，赠送积分失败";
                     }
-
-
                 }
                 else //Lost
                 {
@@ -367,8 +371,6 @@ namespace NFine.Web.Areas.Games
                     log.F_LastModifyUserId = "";
                     log.F_LastModifyTime = null;
                     app.SubmitForm(log, string.Empty);
-                    
-
                     if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting.GameName))
                     {
                         ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个，你和历史最高分相差了" + tmp + "个";

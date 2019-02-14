@@ -59,25 +59,25 @@
             <div>
                 <form id="form1">
                     <div class="mail-box">
-                        <div class="mail-header">看看你有多色设定</div>
+                        <div class="mail-header">【看看你有多色】设定</div>
                         <div class="mail-body">
                             <table style="padding:10px; margin:10px;">
                                 <tr>
                                     <td  style="text-align:right">游戏名称 </td>
                                     <td nowrap="nowrap" style="margin:10px;padding:10px;">
-                                        <input id="txtGameName" name="txtGameName" style="width:200px;" type="text"  placeholder="输入游戏名称" />
+                                        <input id="txtGameSeName" name="txtGameSeName" style="width:200px;" type="text"  placeholder="输入游戏名称" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td  style="text-align:right">LB积分兑换规则 :</td>
                                     <td  nowrap="nowrap"  style="margin:10px;padding:10px;">
-                                        1个LB积分兑换<input id="txtGameScoreForLB" name="txtGameScoreForLB" style="width:100px;" type="text" placeholder="输入游戏积分" />
+                                        1个LB积分等于<input id="txtGameSeScoreForLB" name="txtGameSeScoreForLB" style="width:50px;" type="text" placeholder="输入游戏积分" />游戏积分
                                     </td>
                                 </tr>
                                 <tr>
                                     <td  style="text-align:right">LoveBird积分兑换规则 :</td>
                                     <td nowrap="nowrap"  style="margin:10px;padding:10px;">
-                                            1个LoveBird积分兑换 <input id="txtGameScoreForLoveBird" name="txtGameScoreForLoveBird" style="width:100px;" type="text" placeholder="输入游戏积分" />
+                                            1个LoveBird积分等于 <input id="txtGameSeScoreForLoveBird" name="txtGameSeScoreForLoveBird" style="width:50px;" type="text" placeholder="输入游戏积分" />游戏积分
                                     </td>
                                 </tr>
                                 <tr>
@@ -92,10 +92,32 @@
                                         <input id="txtLowestPlayLoveBirdForSe" name="txtLowestPlayLoveBirdForSe" style="width:200px;" type="text" placeholder="输入最低入场的LoveBird积分数量" />
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td style="text-align:right">游戏模式 :</td>
+                                    <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                        <input type="radio" id="txtGameModeForSe1" name="txtGameModeForSe" checked="checked" disabled="disabled" />根据玩家历史最高分来定输赢
+                                        <input type="radio" id="txtGameModeForSe2" name="txtGameModeForSe"  disabled="disabled" />根据预定的分数级别来定输赢
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right">扣分模式 :</td>
+                                    <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                        <input type="radio" id="txtExchangeForSe1" name="txtExchangeForSe1" checked="checked" disabled="disabled" />得分比例进行兑换
+                                        <input type="radio" id="txtExchangeForSe2" name="txtExchangeForSe2" disabled="disabled" />按预定分数进行兑换
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right">模式说明 :</td>
+                                    <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                            模式A：根据玩家历史最高分来定输赢<br />
+                                            1：玩家首次玩肯定是赢，游戏得多少分就按既定比例赠送LB/LoveBird积分.<br />
+                                            2: 后续每次玩得的分数，都跟自己历史最高分相比，高于等于最高分视为赢，则按既定比例赠送LB/Love Birdji积分。如果低于最高分，视为输，则按既定比例扣除LB/Love Birdji积分.
+                                    </td>
+                                </tr>
                             </table>
                         </div>
-                        <div class="mail-body" style="text-align: right;">
-                            <a href="javascript:void()" onclick="submitForm()" class="btn btn-primary" style="margin-right: 5px;"><i class="fa fa-reply"></i>发送</a>
+                        <div class="mail-body" style="text-align: left;">
+                            <a href="javascript:void()" onclick="submitSeForm()" class="btn btn-primary" style="margin-right: 5px;"><i class="fa fa-reply"></i>保存设置</a>
                         </div>
                     </div>
                 </form>
@@ -112,6 +134,38 @@
 </div>
 
 <script type="text/javascript">
+
+
+    //$(document).ready(function () {
+
+
+
+    //});
+
+    function submitSeForm() {
+
+        $.ajax({
+            url: "/GameList/SaveSeSetting", //你的路由地址
+            type: "post",
+            dataType: "text",
+            data: $("#form1").serialize(),
+            timeout: 30000,
+            success: function (data) {
+                if (data == "yes") {
+                    alert("保存成功");
+                } else {
+                    alert("保存失败");
+                }
+            },
+            error: function () {
+                alert("发生不可预计错误，请重新尝试");
+            }
+        });
+
+    }
+
+
+
 $(function ()
 {
 　　$(".tabbox li").click(function ()
@@ -122,7 +176,14 @@ $(function ()
 　　　　var index = $(this).index();
 　　　　$(this).parent().siblings().children().eq(index).addClass("active")
 　　　　.siblings().removeClass("active");
-　　});
+    });
+
+    $("#txtGameSeName").val('@ViewBag.GameName');
+    $("#txtGameSeScoreForLB").val('@ViewBag.LBRatio');
+    $("#txtGameSeScoreForLoveBird").val('@ViewBag.LoveBirdRatio');
+    $("#txtLowestPlayLBForSe").val('@ViewBag.LowestPlayLB');
+    $("#txtLowestPlayLoveBirdForSe").val('@ViewBag.LowestPlayLoveBird');
+
 });
 
 </script>
