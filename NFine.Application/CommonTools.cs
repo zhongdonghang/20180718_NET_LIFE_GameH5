@@ -1,4 +1,8 @@
-﻿using NFine.Code;
+﻿using Newtonsoft.Json.Linq;
+using NFine.Application.TGame;
+using NFine.Code;
+using NFine.Domain._03_Entity.T_Game.GameSetting;
+using NFine.Domain.Entity.TGame;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,5 +43,30 @@ namespace NFine.Application
             string responseString = HttpMethods.HttpPost(url, parm);
             return responseString.Contains("0");
         }
+
+        /// <summary>
+        /// 游戏积分转换成钱包积分
+        /// </summary>
+        /// <param name="gameScore">游戏得分</param>
+        /// <param name="coinType">消耗积分类型 1:LoveBird积分 2:LB积分</param>
+        /// <param name="setting">游戏表里设置字段的json对象</param>
+        /// <returns></returns>
+        public static int GameScore2LifeScore(int gameScore,int coinType, JObject setting)
+        {
+            int LifeScore = 0;
+            if (coinType == 2)
+            {
+                int LBRatio = int.Parse(setting["LBRatio"].ToString());
+                //LB积分和游戏分数比例，即1个LB积分等于游戏的多少分数
+                LifeScore = gameScore / LBRatio;
+            }
+            else if (coinType == 1)
+            {
+                int LoveBirdRatio = int.Parse(setting["LoveBirdRatio"].ToString());
+                LifeScore = gameScore / LoveBirdRatio;
+            }
+            return LifeScore;
+        }
+
     }
 }

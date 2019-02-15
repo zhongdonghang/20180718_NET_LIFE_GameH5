@@ -30,7 +30,7 @@ namespace NFine.Repository.TGameLog
 
         public double GetMaxScoreByAccount(string lbAccount,int F_CoinType,string eName)
         {
-            string sqlMaxScore = "select max(F_Score) from T_GameLog where F_GameNo='"+eName+"' and  F_WinOrLost=1 and  F_CoinType=" + F_CoinType + " and  F_LBAccount ='" + lbAccount + "'";
+            string sqlMaxScore = "select max(F_GameScore) from T_GameLog where F_GameNo='" + eName+"' and  F_WinOrLost=1 and  F_CoinType=" + F_CoinType + " and  F_LBAccount ='" + lbAccount + "'";
             double maxScore = 0;
 
             if (!double.TryParse(DbHelper.ExecuteScalar(sqlMaxScore).ToString(), out maxScore))
