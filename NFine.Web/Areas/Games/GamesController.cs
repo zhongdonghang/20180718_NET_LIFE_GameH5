@@ -934,6 +934,169 @@ namespace NFine.Web.Areas.Games
             return new RedirectResult("/GameContent/mspt/index.html");
         }
 
+        public string MNResultHandle()
+        {
+            if (Session["loginID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+            if (Session["userID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
+                Response.End();
+            }
+            if (Session["LBOrLoveBird"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
+                Response.End();
+            }
+            string ret = "";
+            string LBAccount = Session["loginID"].ToString();
+            string userID = Session["userID"].ToString();
+
+            string result = Request["result"].Trim().ToLower();
+
+            TGameLogApp app = new TGameLogApp();
+            ///从数据库获取游戏设置
+            TGameEntity entity = gameApp.GetForm("5");
+            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
+            string level = Request["level"].Trim();
+            //积分类型
+            int F_CoinType = 2;
+            if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
+            if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
+
+            if (result == "win")//赢了
+            {
+                int gameLevel = int.Parse(level);
+                int score = GetMNGameScore(gameLevel, true, setting);
+
+                //写入记录，赠送积分
+                TGameLogEntity log = new TGameLogEntity();
+                log.F_Id = Guid.NewGuid().ToString();
+                log.F_LBAccount = LBAccount;
+                log.F_LogNo = userID;
+                log.F_GameNo = "mspt";
+
+                //计算税收
+                double Tax = double.Parse(setting["Tax"].ToString());
+
+                //按兑换比例计算实际得分（LB或者LoveBird）
+                log.F_Score = score - (int)((double)score * Tax); //扣税得分
+                log.F_Tax = ((double)score * Tax); //税金
+                log.F_GameScore = score;
+                log.F_CoinType = F_CoinType;
+                log.F_WinOrLost = 1;
+                log.F_LogState = 0;
+                log.F_LogTime = DateTime.Now;
+                log.F_LogType = 0;
+                log.F_LogFlag = 0;
+                log.F_Remark = "美女拼图赢了" + log.F_Score + "积分,关数为第" + gameLevel + "关";
+                log.F_MarkTime = DateTime.Now;
+                log.F_CreatorUserId = "system";
+                log.F_CreatorTime = DateTime.Now;
+                log.F_DeleteMark = false;
+                log.F_DeleteUserId = "";
+                log.F_DeleteTime = null;
+                log.F_LastModifyUserId = "";
+                log.F_LastModifyTime = null;
+                app.SubmitForm(log, string.Empty);
+
+                if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                {
+                    ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                }
+                else
+                {
+                    ret = "网络错误，赠送积分失败";
+                }
+            }
+            else
+            {
+                int gameLevel = int.Parse(level);
+                int score = GetMNGameScore(gameLevel, false, setting);
+                //写入记录
+                TGameLogEntity log = new TGameLogEntity();
+                log.F_Id = Guid.NewGuid().ToString();
+                log.F_LBAccount = LBAccount;
+                log.F_LogNo = userID;
+                log.F_GameNo = "mspt";
+                //按兑换比例计算实际得分（LB或者LoveBird）
+                log.F_Score = score;
+                log.F_Tax = 0; //税金
+                log.F_GameScore = score;
+                log.F_CoinType = F_CoinType;
+                log.F_WinOrLost = 2;
+                log.F_LogState = 0;
+                log.F_LogTime = DateTime.Now;
+                log.F_LogType = 0;
+                log.F_LogFlag = 0;
+                log.F_Remark = "美女拼图在第"+ gameLevel + "关输了,扣除" + log.F_Score + "积分";
+                log.F_MarkTime = DateTime.Now;
+                log.F_CreatorUserId = "system";
+                log.F_CreatorTime = DateTime.Now;
+                log.F_DeleteMark = false;
+                log.F_DeleteUserId = "";
+                log.F_DeleteTime = null;
+                log.F_LastModifyUserId = "";
+                log.F_LastModifyTime = null;
+                app.SubmitForm(log, string.Empty);
+
+                if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                {
+                    ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                }
+                else
+                {
+                    ret = "网络错误，扣除积分失败";
+                }
+            }
+            return ret;
+        }
+
+        public int GetMNGameScore(int level,bool isWin, JObject setting)
+        {
+            int result = 0;
+            switch (level)
+            {
+                case 1:
+                    result = isWin ? int.Parse(setting["Rule1"]["WinScore"].ToString()) : int.Parse(setting["Rule1"]["LostScore"].ToString());
+                    break;
+                case 2:
+                    result = isWin ? int.Parse(setting["Rule2"]["WinScore"].ToString()) : int.Parse(setting["Rule2"]["LostScore"].ToString());
+                    break;
+                case 3:
+                    result = isWin ? int.Parse(setting["Rule3"]["WinScore"].ToString()) : int.Parse(setting["Rule3"]["LostScore"].ToString());
+                    break;
+                case 4:
+                    result = isWin ? int.Parse(setting["Rule4"]["WinScore"].ToString()) : int.Parse(setting["Rule4"]["LostScore"].ToString());
+                    break;
+                case 5:
+                    result = isWin ? int.Parse(setting["Rule5"]["WinScore"].ToString()) : int.Parse(setting["Rule5"]["LostScore"].ToString());
+                    break;
+                case 6:
+                    result = isWin ? int.Parse(setting["Rule6"]["WinScore"].ToString()) : int.Parse(setting["Rule6"]["LostScore"].ToString());
+                    break;
+                case 7:
+                    result = isWin ? int.Parse(setting["Rule7"]["WinScore"].ToString()) : int.Parse(setting["Rule7"]["LostScore"].ToString());
+                    break;
+                case 8:
+                    result = isWin ? int.Parse(setting["Rule8"]["WinScore"].ToString()) : int.Parse(setting["Rule8"]["LostScore"].ToString());
+                    break;
+                case 9:
+                    result = isWin ? int.Parse(setting["Rule9"]["WinScore"].ToString()) : int.Parse(setting["Rule9"]["LostScore"].ToString());
+                    break;
+                case 10:
+                    result = isWin ? int.Parse(setting["Rule10"]["WinScore"].ToString()) : int.Parse(setting["Rule10"]["LostScore"].ToString());
+                    break;
+                default:
+                    break;
+            }
+
+            return result;
+        }
+
         #endregion
     }
 }

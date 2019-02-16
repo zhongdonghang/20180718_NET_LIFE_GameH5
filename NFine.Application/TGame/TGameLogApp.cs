@@ -29,7 +29,7 @@ namespace NFine.Application.TGameLog
               //  expression = expression.Or(t => t.F_GameNo.Contains(keyword));
             }
             //expression = expression.And(t => t.F_Category == 1);
-            return service.IQueryable(expression).OrderBy(t => t.F_CreatorTime).ToList();
+            return service.IQueryable(expression).OrderByDescending(t => t.F_CreatorTime).ToList();
         }
 
         public List<TGameLogEntity> GetList(Pagination pagination, string queryJson)

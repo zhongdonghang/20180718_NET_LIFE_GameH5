@@ -714,20 +714,40 @@
             p = {};
         p.init = function(e) {
             var t = o.getTemplate("jigsawTemplate")();
+            var subCount = 0;
             e.html(t), p.jigsawGame = s, p.jigsawGame.init(e), p.dom = e, p.jigsawGame.on("picOver", function(e) {
                 dp_submitScore(p.currentGame.pic + 1);
-                alert("赢了" + p.currentGame.pic+"关");
+                // alert("赢了" + p.currentGame.pic+"关");
+                var gameLevel = p.currentGame.pic + 1;
+                $.ajax({
+                    url: "/Games/MNResultHandle?result=win&level=" + gameLevel,
+                    type: "post",
+                    dataType: "text",
+                    success: function (data) {
+                        alert(data);
+                    }
+                });
+
 				var str="恭喜您挑战成功，共闯过了<em>"+(p.currentGame.pic+1)+"</em>关";
 				if(!p.hasNextPic()){
 					str="恭喜您全部通关!，共闯过了<em>"+(p.currentGame.pic+1)+"</em>关,分享到朋友炫耀一下吧!";
 				}
 				showGameResult(str,true,p.hasNextPic());
             }), p.jigsawGame.on("timeout", function () {
-                alert("输了" + p.currentGame.pic+"关");
-                showGameResult("挑战失败，共闯过了<em>" + (p.currentGame.pic) + "</em>关", false, p.hasNextPic());
                 
-                var e = this;
-                e.timer.clear();
+                if (subCount == 0) {//提交失败数据
+                    subCount++;
+                    var gameLevel = p.currentGame.pic + 1;
+                    $.ajax({
+                        url: "/Games/MNResultHandle?result=lost&level=" + gameLevel,
+                        type: "post",
+                        dataType: "text",
+                        success: function (data) {
+                            alert(data);
+                        }
+                    });
+                }
+                showGameResult("挑战失败，共闯过了<em>" + (p.currentGame.pic) + "</em>关", false, p.hasNextPic());
 
             })
             $('#againgame').click(function () {
