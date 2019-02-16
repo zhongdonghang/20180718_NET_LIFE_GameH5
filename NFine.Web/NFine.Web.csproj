@@ -475,6 +475,7 @@
     <Content Include="GameContent\xxk1000\js\wx.js" />
     <Content Include="Global.asax" />
     <Content Include="Index.htm" />
+    <Content Include="test.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -712,6 +713,7 @@
     <Content Include="GameContent\shenjingmao2\说明.doc" />
     <Content Include="GameContent\se\assets\img\Descr.WD3" />
     <Content Include="GameContent\se\assets\js\Descr.WD3" />
+    <None Include="Properties\PublishProfiles\1.pubxml" />
     <None Include="Properties\PublishProfiles\NFine.Framework.Release.pubxml" />
     <Content Include="Views\Games\GameList.cshtml" />
     <Content Include="Views\GameList\Index.cshtml" />
