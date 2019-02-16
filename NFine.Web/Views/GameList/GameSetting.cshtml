@@ -204,12 +204,98 @@
 
             </div>
         </div>
-        <div>33333333333</div>
+        <div>
+            <form id="form3">
+                <div class="mail-box">
+                    <div class="mail-header">【扫雷】设定</div>
+                    <div class="mail-body">
+                        <table style="padding:10px; margin:10px;">
+                            <tr>
+                                <td style="text-align:right">游戏名称 </td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    <input id="txtGameSaoLeiName" name="txtGameSaoLeiName" style="width:200px;" type="text" placeholder="输入游戏名称" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">扣分规则</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                 游戏输了扣除积分数量<input id="txtSaoLeiLostScore" name="txtSaoLeiLostScore" style="width:100px;" type="text" placeholder="积分数量" />个
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">规则设定1</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                   在<input id="txtSaoleiRuleTimes1" name="txtSaoleiRuleTimes1" style="width:100px;" type="text" placeholder="输入秒数" />秒内赢了得
+                                    <input id="txtSaoleiRuleScore1" name="txtSaoleiRuleScore1" style="width:100px;" type="text" placeholder="赢得积分" />个积分
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">规则设定2</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    在<input id="txtSaoleiRuleTimes2" name="txtSaoleiRuleTimes2" style="width:100px;" type="text" placeholder="输入秒数" />秒内赢了得
+                                    <input id="txtSaoleiRuleScore2" name="txtSaoleiRuleScore2" style="width:100px;" type="text" placeholder="赢得积分" />个积分
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">规则设定3</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    在<input id="txtSaoleiRuleTimes3" name="txtSaoleiRuleTimes3" style="width:100px;" type="text" placeholder="输入秒数" />秒内赢了得
+                                    <input id="txtSaoleiRuleScore3" name="txtSaoleiRuleScore3" style="width:100px;" type="text" placeholder="赢得积分" />个积分
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">最低入场的LB积分数量 :</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    <input id="txtLowestPlayLBForSL" name="txtLowestPlayLBForSL" style="width:200px;" type="text" placeholder="输入最低入场的LB积分数量" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">最低入场的LoveBird积分数量 :</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    <input id="txtLowestPlayLoveBirdForSL" name="txtLowestPlayLoveBirdForSL" style="width:200px;" type="text" placeholder="输入最低入场的LoveBird积分数量" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">税收 :</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    百分之<input id="txtGameSLTax" name="txtGameSLTax" style="width:200px;" type="text" placeholder="输入税收比例" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mail-body" style="text-align: left;">
+                        <a href="javascript:void()" onclick="submitSaoLeiForm()" class="btn btn-primary" style="margin-right: 5px;"><i class="fa fa-reply"></i>保存设置</a>
+                    </div>
+                </div>
+            </form>
+        </div>
         <div>44444444</div>
     </div>
 </div>
 
 <script type="text/javascript">
+
+    function submitSaoLeiForm() {
+
+        $.ajax({
+            url: "/GameList/SaveSLSetting", //你的路由地址
+            type: "post",
+            dataType: "text",
+            data: $("#form3").serialize(),
+            timeout: 30000,
+            success: function (data) {
+                if (data == "yes") {
+                    alert("保存成功");
+                } else {
+                    alert("保存失败");
+                }
+            },
+            error: function () {
+                alert("发生不可预计错误，请重新尝试");
+            }
+        });
+
+    }
 
     function submitXXKForm() {
 
@@ -282,6 +368,19 @@
         $("#txtLowestPlayLBForXXK").val('@ViewBag.XXKLowestPlayLB');
         $("#txtLowestPlayLoveBirdForXXK").val('@ViewBag.XXKLowestPlayLoveBird');
         $("#txtGameXXKTax").val('@ViewBag.XXKTax');
+
+        //扫雷显示
+        $("#txtGameSaoLeiName").val('@ViewBag.txtGameSaoLeiName');
+        $("#txtSaoLeiLostScore").val('@ViewBag.txtSaoLeiLostScore');
+        $("#txtSaoleiRuleTimes1").val('@ViewBag.txtSaoleiRuleTimes1');
+        $("#txtSaoleiRuleScore1").val('@ViewBag.txtSaoleiRuleScore1');
+        $("#txtSaoleiRuleTimes2").val('@ViewBag.txtSaoleiRuleTimes2');
+        $("#txtSaoleiRuleScore2").val('@ViewBag.txtSaoleiRuleScore2');
+        $("#txtSaoleiRuleTimes3").val('@ViewBag.txtSaoleiRuleTimes3');
+        $("#txtSaoleiRuleScore3").val('@ViewBag.txtSaoleiRuleScore3');
+        $("#txtLowestPlayLBForSL").val('@ViewBag.txtLowestPlayLBForSL');
+        $("#txtLowestPlayLoveBirdForSL").val('@ViewBag.txtLowestPlayLoveBirdForSL');
+        $("#txtGameSLTax").val('@ViewBag.txtGameSLTax');
     });
 
 </script>

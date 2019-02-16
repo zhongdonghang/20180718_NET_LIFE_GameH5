@@ -385,6 +385,16 @@
     <Content Include="Content\js\zsign\jquery.zsign.css" />
     <Content Include="Content\js\zsign\jquery.zsign.js" />
     <Content Include="Content\js\zsign\signet.gif" />
+    <Content Include="GameContent\saolei\icon.png" />
+    <Content Include="GameContent\saolei\index.html" />
+    <Content Include="GameContent\saolei\jquery\2.1.1\jquery.min.js" />
+    <Content Include="GameContent\saolei\js\bootstrap.min.css" />
+    <Content Include="GameContent\saolei\js\bootstrap.min.js" />
+    <Content Include="GameContent\saolei\js\engine.css" />
+    <Content Include="GameContent\saolei\js\engine.js" />
+    <Content Include="GameContent\saolei\js\game.css" />
+    <Content Include="GameContent\saolei\js\game.js" />
+    <Content Include="GameContent\saolei\share.png" />
     <Content Include="GameContent\se\assets\css\m.css" />
     <Content Include="GameContent\se\assets\img\find.logo.png" />
     <Content Include="GameContent\se\assets\img\share.png" />
