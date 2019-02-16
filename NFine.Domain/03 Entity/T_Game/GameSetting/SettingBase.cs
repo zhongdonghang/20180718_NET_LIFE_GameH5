@@ -9,7 +9,7 @@ namespace NFine.Domain._03_Entity.T_Game.GameSetting
     /// <summary>
     /// 游戏配置基类
     /// </summary>
-    public class SettingBase
+    public class SettingBase 
     {
         /// <summary>
         /// 游戏名字

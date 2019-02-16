@@ -715,24 +715,33 @@
         p.init = function(e) {
             var t = o.getTemplate("jigsawTemplate")();
             e.html(t), p.jigsawGame = s, p.jigsawGame.init(e), p.dom = e, p.jigsawGame.on("picOver", function(e) {
-				dp_submitScore(p.currentGame.pic+1);
+                dp_submitScore(p.currentGame.pic + 1);
+                alert("赢了" + p.currentGame.pic+"关");
 				var str="恭喜您挑战成功，共闯过了<em>"+(p.currentGame.pic+1)+"</em>关";
 				if(!p.hasNextPic()){
 					str="恭喜您全部通关!，共闯过了<em>"+(p.currentGame.pic+1)+"</em>关,分享到朋友炫耀一下吧!";
 				}
 				showGameResult(str,true,p.hasNextPic());
-            }), p.jigsawGame.on("timeout", function() {
-				showGameResult("挑战失败，共闯过了<em>"+(p.currentGame.pic)+"</em>关",false,p.hasNextPic()); 
+            }), p.jigsawGame.on("timeout", function () {
+                alert("输了" + p.currentGame.pic+"关");
+                showGameResult("挑战失败，共闯过了<em>" + (p.currentGame.pic) + "</em>关", false, p.hasNextPic());
+                
+                var e = this;
+                e.timer.clear();
+
             })
-			$('#againgame').click(function(){
+            $('#againgame').click(function () {
+              //  alert("开始");
 				window.location.href=window.location.href;
 			});
-			$('#restartgame').click(function(){
-				p.currentGame.pic--;
+            $('#restartgame').click(function () {
+                p.currentGame.pic--;
+              //  alert("再来" + p.currentGame.pic);
 				p.playNextPic();
 				hideGameResult();
 			});
-			$('#continuegame').click(function(){
+            $('#continuegame').click(function () {
+               // alert("继续");
 				p.playNextPic();
 				hideGameResult();
 			});
@@ -944,7 +953,8 @@
         n.init(t)
     })
 }(window.NODEB && window.NODEB.define || window.define, window);
-function showGameResult(str,iswin,hasNext){
+function showGameResult(str, iswin, hasNext) {
+    //alert("lost");
 	$('#gameresult .resultinfo').html(str);
 	if(!iswin){
 		$('#againgame').hide();

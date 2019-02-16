@@ -73,6 +73,48 @@ namespace NFine.Web.Areas.Games
             ViewBag.txtLowestPlayLBForSL = SLSetting["LowestPlayLB"].ToString();
             ViewBag.txtLowestPlayLoveBirdForSL = SLSetting["LowestPlayLoveBird"].ToString();
             ViewBag.txtGameSLTax = double.Parse(SLSetting["Tax"].ToString()) * 100;
+
+            //加载显示美女拼图规则
+            TGameEntity mn = gameApp.GetForm("5");
+            JObject mnSetting = NFine.Code.Json.ToJObject(mn.F_Setting);
+
+            ViewBag.txtGameMNName = mnSetting["GameName"].ToString();
+
+            ViewBag.txtGameMNWinScore1 = mnSetting["Rule1"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore1 = mnSetting["Rule1"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinScore2 = mnSetting["Rule2"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore2 = mnSetting["Rule2"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinScore3 = mnSetting["Rule3"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore3 = mnSetting["Rule3"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinScore4 = mnSetting["Rule4"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore4 = mnSetting["Rule4"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinScore5 = mnSetting["Rule5"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore5 = mnSetting["Rule5"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinScore6 = mnSetting["Rule6"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore6 = mnSetting["Rule6"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinScore7 = mnSetting["Rule7"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore7 = mnSetting["Rule7"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinScore8 = mnSetting["Rule8"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore8 = mnSetting["Rule8"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinScore9 = mnSetting["Rule9"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore9 = mnSetting["Rule9"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinScore10 = mnSetting["Rule10"]["WinScore"].ToString();
+            ViewBag.txtGameMNLostScore10 = mnSetting["Rule10"]["LostScore"].ToString();
+
+            ViewBag.txtGameMNWinAllScore = mnSetting["ALlInScore"].ToString();
+            ViewBag.txtLowestPlayLBForMN = mnSetting["LowestPlayLB"].ToString();
+            ViewBag.txtLowestPlayLoveBirdForMN = mnSetting["LowestPlayLoveBird"].ToString();
+
+            ViewBag.txtGameMNTax = double.Parse(mnSetting["Tax"].ToString()) * 100;
             return View();
         }
 
@@ -180,6 +222,116 @@ namespace NFine.Web.Areas.Games
             TGameEntity entity = gameApp.GetForm("4");
             entity.F_Setting = jsonStr;
             gameApp.SubmitForm(entity, "4");
+
+            return "yes";
+        }
+
+        /// <summary>
+        /// 保存美女拼图设置
+        /// </summary>
+        /// <returns></returns>
+        public string SaveMNSetting()
+        {
+            string txtGameMNName = Request["txtGameMNName"].Trim();
+
+            string txtGameMNWinScore1 = Request["txtGameMNWinScore1"].Trim();
+            string txtGameMNLostScore1 = Request["txtGameMNLostScore1"].Trim();
+
+            string txtGameMNWinScore2 = Request["txtGameMNWinScore2"].Trim();
+            string txtGameMNLostScore2 = Request["txtGameMNLostScore2"].Trim();
+
+            string txtGameMNWinScore3 = Request["txtGameMNWinScore3"].Trim();
+            string txtGameMNLostScore3 = Request["txtGameMNLostScore3"].Trim();
+
+            string txtGameMNWinScore4 = Request["txtGameMNWinScore4"].Trim();
+            string txtGameMNLostScore4 = Request["txtGameMNLostScore4"].Trim();
+
+            string txtGameMNWinScore5 = Request["txtGameMNWinScore5"].Trim();
+            string txtGameMNLostScore5 = Request["txtGameMNLostScore5"].Trim();
+
+            string txtGameMNWinScore6 = Request["txtGameMNWinScore6"].Trim();
+            string txtGameMNLostScore6 = Request["txtGameMNLostScore6"].Trim();
+
+            string txtGameMNWinScore7 = Request["txtGameMNWinScore7"].Trim();
+            string txtGameMNLostScore7 = Request["txtGameMNLostScore7"].Trim();
+
+            string txtGameMNWinScore8 = Request["txtGameMNWinScore8"].Trim();
+            string txtGameMNLostScore8 = Request["txtGameMNLostScore8"].Trim();
+
+            string txtGameMNWinScore9 = Request["txtGameMNWinScore9"].Trim();
+            string txtGameMNLostScore9 = Request["txtGameMNLostScore9"].Trim();
+
+            string txtGameMNWinScore10 = Request["txtGameMNWinScore10"].Trim();
+            string txtGameMNLostScore10 = Request["txtGameMNLostScore10"].Trim();
+
+            string txtGameMNWinAllScore = Request["txtGameMNWinAllScore"].Trim();
+
+            string txtLowestPlayLBForMN = Request["txtLowestPlayLBForMN"].Trim();
+            string txtLowestPlayLoveBirdForMN = Request["txtLowestPlayLoveBirdForMN"].Trim();
+            string txtGameMNTax = Request["txtGameMNTax"].Trim();
+
+            MsptSetting setting = new MsptSetting();
+            setting.GameName = txtGameMNName;
+            setting.LowestPlayLB = double.Parse(txtLowestPlayLBForMN);
+            setting.LowestPlayLoveBird = double.Parse(txtLowestPlayLoveBirdForMN);
+            setting.Tax = double.Parse(txtGameMNTax) / 100;
+
+            setting.Rule1 = new MsptRule();
+            setting.Rule1.Level = 1;
+            setting.Rule1.WinScore = int.Parse(txtGameMNWinScore1);
+            setting.Rule1.LostScore = int.Parse(txtGameMNLostScore1);
+
+            setting.Rule2 = new MsptRule();
+            setting.Rule2.Level = 2;
+            setting.Rule2.WinScore = int.Parse(txtGameMNWinScore2);
+            setting.Rule2.LostScore = int.Parse(txtGameMNLostScore2);
+
+            setting.Rule3 = new MsptRule();
+            setting.Rule3.Level = 3;
+            setting.Rule3.WinScore = int.Parse(txtGameMNWinScore3);
+            setting.Rule3.LostScore = int.Parse(txtGameMNLostScore3);
+
+            setting.Rule4 = new MsptRule();
+            setting.Rule4.Level = 4;
+            setting.Rule4.WinScore = int.Parse(txtGameMNWinScore4);
+            setting.Rule4.LostScore = int.Parse(txtGameMNLostScore4);
+
+            setting.Rule5 = new MsptRule();
+            setting.Rule5.Level = 5;
+            setting.Rule5.WinScore = int.Parse(txtGameMNWinScore5);
+            setting.Rule5.LostScore = int.Parse(txtGameMNLostScore5);
+
+            setting.Rule6 = new MsptRule();
+            setting.Rule6.Level = 6;
+            setting.Rule6.WinScore = int.Parse(txtGameMNWinScore6);
+            setting.Rule6.LostScore = int.Parse(txtGameMNLostScore6);
+
+            setting.Rule7 = new MsptRule();
+            setting.Rule7.Level = 7;
+            setting.Rule7.WinScore = int.Parse(txtGameMNWinScore7);
+            setting.Rule7.LostScore = int.Parse(txtGameMNLostScore7);
+
+            setting.Rule8 = new MsptRule();
+            setting.Rule8.Level = 8;
+            setting.Rule8.WinScore = int.Parse(txtGameMNWinScore8);
+            setting.Rule8.LostScore = int.Parse(txtGameMNLostScore8);
+
+            setting.Rule9 = new MsptRule();
+            setting.Rule9.Level = 9;
+            setting.Rule9.WinScore = int.Parse(txtGameMNWinScore9);
+            setting.Rule9.LostScore = int.Parse(txtGameMNLostScore9);
+
+            setting.Rule10 = new MsptRule();
+            setting.Rule10.Level = 10;
+            setting.Rule10.WinScore = int.Parse(txtGameMNWinScore10);
+            setting.Rule10.LostScore = int.Parse(txtGameMNLostScore10);
+
+            setting.ALlInScore = int.Parse(txtGameMNWinAllScore);
+
+            string jsonStr = NFine.Code.Json.ToJson(setting);
+            TGameEntity entity = gameApp.GetForm("5");
+            entity.F_Setting = jsonStr;
+            gameApp.SubmitForm(entity, "5");
 
             return "yes";
         }

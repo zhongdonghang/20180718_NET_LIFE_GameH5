@@ -54,6 +54,7 @@
     <Compile Include="03 Entity\SystemSecurity\FilterIPEntity.cs" />
     <Compile Include="03 Entity\SystemSecurity\LogEntity.cs" />
     <Compile Include="02 ViewModel\AuthorizeActionModel.cs" />
+    <Compile Include="03 Entity\T_Game\GameSetting\MsptSetting.cs" />
     <Compile Include="03 Entity\T_Game\GameSetting\SaoLeiSetting.cs" />
     <Compile Include="03 Entity\T_Game\GameSetting\SeSetting.cs" />
     <Compile Include="03 Entity\T_Game\GameSetting\SettingBase.cs" />

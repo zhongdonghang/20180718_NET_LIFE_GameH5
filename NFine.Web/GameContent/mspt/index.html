@@ -61,6 +61,9 @@
 		</style>
 	</head>
 <body>
+    <p></p>
+    <p></p>
+    <p></p>
 <!--页面集合-->
 <div id="pageWrapper">
 	<div id="pages">
@@ -79,7 +82,7 @@
 			<a class="btn1 hide" id="againgame">再玩一次</a>
 			<a class="btn1 hide" id="restartgame">再来一次</a>
 			<a class="btn1 " id="continuegame">挑战下一关</a>
-			<a class="btn1" id="sharegame" onClick="dp_share();">炫耀一下</a>
+			<!--<a class="btn1" id="sharegame" onClick="dp_share();">炫耀一下</a>-->
 		</div>
 		<!--<div class="btngroup">
 			<a class="btn1" onClick="clickMore();">更多游戏</a>
@@ -150,8 +153,8 @@
 				<span class="restart" style="display:none;" onclick="window.reload();">重新开始</span>
 				<span class="nextpic">下一关</span>
 				<span class="continuepic">继续挑战</span>
-				<span class="oldshare">分享</span>
-				<span class="moregame">更多游戏</span>
+				<!--<span class="oldshare">分享</span>
+				<span class="moregame">更多游戏</span>-->
 			</div>
 		</div>
 	</div>
@@ -175,7 +178,7 @@
 	<div class="opera">
 		<span class="red next">第<%=next%>关&gt;</span>
 		<span class="playagain">再玩一遍</span>
-		<span class="share">分享</span>
+		<!--<span class="share">分享</span>-->
 	</div>
 </div>
 </script>
@@ -183,7 +186,7 @@
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$.getScript("./js/index.js",function(){
+	$.getScript("./js/index.js?v=1",function(){
 	})
 });
 </script>
@@ -252,7 +255,10 @@ var guanzhuurl ="http://mp.weixin.qq.com/s?__biz=MzA5NDgwNjg0Nw==&mid=501926235&
 		<div style="display: none;">
 			<script type="text/javascript">
             var myData = { gameid: "mspt" };
-			function dp_submitScore(score){
+            function dp_submitScore(score) {
+
+                //alert(score);
+
 				myData.score =parseInt(score);
 				myData.scoreName = "闯了"+score+"关";
 				document.title ="我在美女拼图中连闯了"+score+"关，这游戏不是一般人能玩的，你们也来试试看吧！";			

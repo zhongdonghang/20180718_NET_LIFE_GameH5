@@ -866,5 +866,74 @@ namespace NFine.Web.Areas.Games
         }
 
         #endregion
+
+        #region 美女拼图
+
+        //loginID=LB33255558&userID=556f3452-5eb0-42e1-b1de-e5b5daa544b1&LBOrLoveBird=LB
+        public ActionResult MN()
+        {
+            if (Request.Params["loginID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+            else if (string.IsNullOrEmpty(Request.Params["loginID"]))
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+            if (Request.Params["userID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+            else if (string.IsNullOrEmpty(Request.Params["userID"]))
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+
+            if (Request.Params["LBOrLoveBird"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
+                Response.End();
+            }
+            else if (string.IsNullOrEmpty(Request.Params["LBOrLoveBird"]))
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
+                Response.End();
+            }
+
+            Session["loginID"] = Request.Params["loginID"];
+            Session["userID"] = Request.Params["userID"];
+            Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
+
+            //判断是不是有足够币来进行游戏
+            TGameEntity entity = gameApp.GetForm("5");
+            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
+
+            bool isTrue = false;
+            if (Session["LBOrLoveBird"].ToString() == "LB")//用LB进行游戏
+            {
+                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
+                if (!isTrue)
+                {
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.End();
+                }
+            }
+            else
+            {
+                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
+                if (!isTrue)
+                {
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.End();
+                }
+            }
+            return new RedirectResult("/GameContent/mspt/index.html");
+        }
+
+        #endregion
     }
 }
