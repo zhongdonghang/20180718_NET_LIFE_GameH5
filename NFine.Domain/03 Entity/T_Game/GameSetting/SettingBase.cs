@@ -35,5 +35,10 @@ namespace NFine.Domain._03_Entity.T_Game.GameSetting
         /// 最低入场的LoveBird积分数量
         /// </summary>
         public double LowestPlayLoveBird { get; set; }
+
+        /// <summary>
+        /// 税收比例，这里是一个数字
+        /// </summary>
+        public double Tax { get; set; }
     }
 }

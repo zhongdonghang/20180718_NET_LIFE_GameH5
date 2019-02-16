@@ -41,5 +41,7 @@ namespace NFine.Domain.Entity.TGameLog
         public DateTime? F_DeleteTime { get; set; }
         public String F_LastModifyUserId { get; set; }
         public DateTime? F_LastModifyTime { get; set; }
+
+        public double? F_Tax { get; set; }
     }
 }

@@ -43,6 +43,7 @@ namespace NFine.Web.Areas.Games
             ViewBag.LoveBirdRatio = setting["LoveBirdRatio"].ToString();
             ViewBag.LowestPlayLoveBird = setting["LowestPlayLoveBird"].ToString();
             ViewBag.LowestPlayLB = setting["LowestPlayLB"].ToString();
+            ViewBag.SeTax = double.Parse(setting["Tax"].ToString())*100;
 
             //加载消消看的设置显示
             TGameEntity XXK = gameApp.GetForm("3");
@@ -54,6 +55,7 @@ namespace NFine.Web.Areas.Games
             ViewBag.XXKLoveBirdRatio = XXKSetting["LoveBirdRatio"].ToString();
             ViewBag.XXKLowestPlayLoveBird = XXKSetting["LowestPlayLoveBird"].ToString();
             ViewBag.XXKLowestPlayLB = XXKSetting["LowestPlayLB"].ToString();
+            ViewBag.XXKTax = double.Parse(XXKSetting["Tax"].ToString())*100;
 
             return View();
         }
@@ -70,6 +72,7 @@ namespace NFine.Web.Areas.Games
             string txtGameSeScoreForLoveBird = Request["txtGameSeScoreForLoveBird"].Trim();
             string txtLowestPlayLBForSe = Request["txtLowestPlayLBForSe"].Trim();
             string txtLowestPlayLoveBirdForSe = Request["txtLowestPlayLoveBirdForSe"].Trim();
+            string txtTax = Request["txtGameSeTax"].Trim();
             SeSetting setting = new SeSetting();
             setting.GameName = txtGameSeName;
             setting.LBRatio = double.Parse(txtGameSeScoreForLB);
@@ -78,6 +81,9 @@ namespace NFine.Web.Areas.Games
             setting.LowestPlayLoveBird = double.Parse(txtLowestPlayLoveBirdForSe);
             setting.IsWinWithHighest = true;
             setting.WinLevelScore = 0;
+
+            setting.Tax =double.Parse(txtTax) / 100;
+
             string jsonStr =  NFine.Code.Json.ToJson(setting);
             TGameEntity entity = gameApp.GetForm("2");
             entity.F_Setting = jsonStr;
@@ -96,6 +102,7 @@ namespace NFine.Web.Areas.Games
             string txtGameXXKScoreForLoveBird = Request["txtGameXXKScoreForLoveBird"].Trim();
             string txtLowestPlayLBForXXK = Request["txtLowestPlayLBForXXK"].Trim();
             string txtLowestPlayLoveBirdForXXK = Request["txtLowestPlayLoveBirdForXXK"].Trim();
+            string txtTax = Request["txtGameXXKTax"].Trim();
             XXKSetting setting = new XXKSetting();
             setting.GameName = txtGameXXKName;
             setting.LBRatio = double.Parse(txtGameXXKScoreForLB);
@@ -104,6 +111,8 @@ namespace NFine.Web.Areas.Games
             setting.LowestPlayLoveBird = double.Parse(txtLowestPlayLoveBirdForXXK);
             setting.IsWinWithHighest = true;
             setting.WinLevelScore = 0;
+            setting.Tax = double.Parse(txtTax) / 100;
+
             string jsonStr = NFine.Code.Json.ToJson(setting);
             TGameEntity entity = gameApp.GetForm("3");
             entity.F_Setting = jsonStr;
