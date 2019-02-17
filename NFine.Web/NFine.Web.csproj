@@ -752,12 +752,13 @@
     <Content Include="GameContent\shenjingmao2\说明.doc" />
     <Content Include="GameContent\se\assets\img\Descr.WD3" />
     <Content Include="GameContent\se\assets\js\Descr.WD3" />
-    <None Include="Properties\PublishProfiles\1.pubxml" />
-    <None Include="Properties\PublishProfiles\NFine.Framework.Release.pubxml" />
     <Content Include="Views\Games\GameList.cshtml" />
     <Content Include="Views\GameList\Index.cshtml" />
     <Content Include="Views\GameLog\Index.cshtml" />
     <Content Include="Views\GameList\GameSetting.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\2.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

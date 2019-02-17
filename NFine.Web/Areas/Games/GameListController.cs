@@ -118,6 +118,30 @@ namespace NFine.Web.Areas.Games
 
                 ViewBag.txtGameMNTax = double.Parse(mnSetting["Tax"].ToString()) * 100;
             }
+
+            //加载显示算术题规则
+            TGameEntity sst = gameApp.GetForm("6");
+            JObject sstSetting = NFine.Code.Json.ToJObject(sst.F_Setting);
+
+            ViewBag.txtGameSSTName = sstSetting["GameName"].ToString();
+
+            ViewBag.txtGameSSTWinCount1 = sstSetting["WinLevel1"]["WinCount"].ToString();
+            ViewBag.txtGameSSTWinScore1 = sstSetting["WinLevel1"]["WinScore"].ToString();
+
+            ViewBag.txtGameSSTWinCount2 = sstSetting["WinLevel2"]["WinCount"].ToString();
+            ViewBag.txtGameSSTWinScore2 = sstSetting["WinLevel2"]["WinScore"].ToString();
+
+            ViewBag.txtGameSSTLostCount1 = sstSetting["LostLevel1"]["LostCount"].ToString();
+            ViewBag.txtGameSSTLostScore1 = sstSetting["LostLevel1"]["LostScore"].ToString();
+
+            ViewBag.txtGameSSTLostCount2 = sstSetting["LostLevel2"]["LostCount"].ToString();
+            ViewBag.txtGameSSTLostScore2 = sstSetting["LostLevel2"]["LostScore"].ToString();
+
+            ViewBag.txtLowestPlayLBForSST = sstSetting["LowestPlayLB"].ToString();
+            ViewBag.txtLowestPlayLoveBirdForSST = sstSetting["LowestPlayLoveBird"].ToString();
+
+            ViewBag.txtGameSSTTax = double.Parse(sstSetting["Tax"].ToString()) * 100;
+
             return View();
         }
 

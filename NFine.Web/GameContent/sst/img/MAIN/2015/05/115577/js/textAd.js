@@ -85,7 +85,16 @@ function test_show() {
 		//updateShare(shareDesc);
 		//Play68.setRankingScoreDesc(score);
 		console.log(score);
-		alert("答对了" + count+"分数"+score);
+	    //alert("答对了" + count+"分数"+score);
+		$.ajax({
+		    url: "/Games/SSTResultHandle",
+		    data: { gameResult: count },
+		    type: "post",
+		    dataType: "text",
+		    success: function (data) {
+		        alert(data);
+		    }
+		});
 	}
 	$(".js_a li span em").click(function(event) {
 
