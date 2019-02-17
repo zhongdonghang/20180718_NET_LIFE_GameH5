@@ -53,6 +53,7 @@
         <li>消消看</li>
         <li>扫雷</li>
         <li>美女拼图</li>
+        <li>疯狂算术题</li>
     </ul>
     <div class="content">
         <div class="active">
@@ -384,11 +385,100 @@
             </form>
 
         </div>
+
+
+        <div>
+            <form id="form5">
+                <div class="mail-box">
+                    <div class="mail-header">【疯狂算术】设定</div>
+                    <div class="mail-body">
+                        <table style="padding:10px; margin:10px;">
+                            <tr>
+                                <td style="text-align:right">游戏名称 </td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    <input id="txtGameSSTName" name="txtGameSSTName" style="width:200px;" type="text" placeholder="输入游戏名称" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">得分设置1</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    做对<input id="txtGameSSTWinCount1" name="txtGameSSTWinCount1" style="width:100px;" type="text" placeholder="输入题数" />题
+                                    得到<input id="txtGameSSTWinScore1" name="txtGameSSTWinScore1" style="width:100px;" type="text" placeholder="输入分数" />积分
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">得分设置2</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    做对<input id="txtGameSSTWinCount2" name="txtGameSSTWinCount2" style="width:100px;" type="text" placeholder="输入题数" />题
+                                    得到<input id="txtGameSSTWinScore2" name="txtGameSSTWinScore2" style="width:100px;" type="text" placeholder="输入分数" />积分
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">扣分设置1</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    少于<input id="txtGameSSTLostCount1" name="txtGameSSTLostCount1" style="width:100px;" type="text" placeholder="输入题数" />题
+                                    被扣除<input id="txtGameSSTLostScore1" name="txtGameSSTLostScore1" style="width:100px;" type="text" placeholder="输入分数" />积分
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">扣分设置2</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    少于<input id="txtGameSSTLostCount2" name="txtGameSSTLostCount2" style="width:100px;" type="text" placeholder="输入题数" />题
+                                    被扣除<input id="txtGameSSTLostScore2" name="txtGameSSTLostScore2" style="width:100px;" type="text" placeholder="输入分数" />积分
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align:right">最低入场的LB积分数量 :</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    <input id="txtLowestPlayLBForSST" name="txtLowestPlayLBForSST" style="width:200px;" type="text" placeholder="输入最低入场的LB积分数量" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">最低入场的LoveBird积分数量 :</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    <input id="txtLowestPlayLoveBirdForSST" name="txtLowestPlayLoveBirdForSST" style="width:200px;" type="text" placeholder="输入最低入场的LoveBird积分数量" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right">税收 :</td>
+                                <td nowrap="nowrap" style="margin:10px;padding:10px;">
+                                    百分之<input id="txtGameSSTTax" name="txtGameSSTTax" style="width:200px;" type="text" placeholder="输入税收比例" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mail-body" style="text-align: left;">
+                        <a href="javascript:void()" onclick="submitSSTForm()" class="btn btn-primary" style="margin-right: 5px;"><i class="fa fa-reply"></i>保存设置</a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
 
+    function submitSSTForm() {
+        $.ajax({
+            url: "/GameList/SaveSSTSetting", //你的路由地址
+            type: "post",
+            dataType: "text",
+            data: $("#form5").serialize(),
+            timeout: 30000,
+            success: function (data) {
+                if (data == "yes") {
+                    alert("保存成功");
+                } else {
+                    alert("保存失败");
+                }
+            },
+            error: function () {
+                alert("发生不可预计错误，请重新尝试");
+            }
+        });
+    }
 
     function submitMNForm() {
         $.ajax({
