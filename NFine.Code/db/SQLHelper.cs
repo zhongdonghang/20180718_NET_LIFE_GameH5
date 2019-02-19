@@ -21,10 +21,8 @@ namespace Maticsoft.DBUtility
     {
 
         //Database connection strings
-        public static readonly string connectionString =  ConfigurationManager.AppSettings["NFineDbContext"];
-        //public static readonly string ConnectionStringInventoryDistributedTransaction =  ConfigurationManager.AppSettings["SQLConnString2"];
-        //public static readonly string ConnectionStringOrderDistributedTransaction =  ConfigurationManager.AppSettings["SQLConnString3"];
-        //public static readonly string ConnectionStringProfile =  ConfigurationManager.AppSettings["SQLProfileConnString"];
+        public static readonly string connectionString =  ConfigurationManager.ConnectionStrings["NFineDbContext"].ToString();
+
 
         // Hashtable to store cached parameters
         private static Hashtable parmCache = Hashtable.Synchronized(new Hashtable());

@@ -5,7 +5,9 @@
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using NFine.Application.SystemManage;
+using NFine.Application.TGame;
 using NFine.Code;
+using NFine.Domain._03_Entity.T_Game.Report;
 using NFine.Domain.Entity.SystemManage;
 using System.Collections.Generic;
 using System.Text;
@@ -25,6 +27,11 @@ namespace NFine.Web.Controllers
         [HttpGet]
         public ActionResult Default()
         {
+            IndexTopReport data = DataReportApp.ToIndexTopReport();
+            ViewBag.PlayerAllCount = data.PlayerAllCount;
+            ViewBag.PlayerCountToday = data.PlayerCountToday;
+            ViewBag.TotalConsumeLbCount = data.TotalConsumeLbCount;
+            ViewBag.TotalConsumeLoveBirdCount = data.TotalConsumeLoveBirdCount;
             return View();
         }
         [HttpGet]
