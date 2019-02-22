@@ -21,10 +21,22 @@ namespace NFine.Web.Areas.Games
 
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetGridJson(string keyword)
+        public ActionResult GetGridJson(Pagination pagination, string keyword,string selGame,string selWinOrLost,string selTime)
         {
-            var data = gameLogApp.GetList(keyword);
+            
+             var data = new
+            {
+                rows = gameLogApp.GetList(pagination, keyword,selGame,selWinOrLost,selTime),
+                total = pagination.total,
+                page = pagination.page,
+                records = pagination.records
+            };
             return Content(data.ToJson());
+             
+
+
+            //var data = gameLogApp.GetList(keyword);
+            //return Content(data.ToJson());
         }
 
     }

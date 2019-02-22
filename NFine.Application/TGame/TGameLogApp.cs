@@ -32,14 +32,51 @@ namespace NFine.Application.TGameLog
             return service.IQueryable(expression).OrderByDescending(t => t.F_CreatorTime).ToList();
         }
 
-        public List<TGameLogEntity> GetList(Pagination pagination, string queryJson)
+        public List<TGameLogEntity> GetList(Pagination pagination, string keyword, string selGame, string selWinOrLost, string selTime)
         {
 		    var expression = ExtLinq.True<TGameLogEntity>();
-            var queryParam = queryJson.ToJObject();
-            if (!queryParam["keyword"].IsEmpty())
+          //  var queryParam = queryJson.ToJObject();
+            if (!keyword.IsEmpty())
             {
-                string keyword = queryParam["keyword"].ToString();
-               // expression = expression.And(t => t.Title.Contains(keyword));
+                //string keyword = queryParam["keyword"].ToString();
+                expression = expression.And(t => t.F_LBAccount.Contains(keyword));
+            }
+            if (!string.IsNullOrEmpty(selGame))
+            {
+                if(selGame!="0") expression = expression.And(t => t.F_GameNo.Contains(selGame));
+            }
+            if (!string.IsNullOrEmpty(selWinOrLost))
+            {
+                if (selWinOrLost != "0")
+                {
+
+                } expression = expression.And(t => t.F_WinOrLost.ToString()==selWinOrLost);
+            }
+            if (!string.IsNullOrEmpty(selTime))
+            {
+                if (selTime == "currentDate")
+                {
+                    string time = DateTime.Now.ToShortDateString();
+                    DateTime time1 = Convert.ToDateTime(time + " 0:00:00");  // 数字前 记得 加空格
+                    DateTime time2 = Convert.ToDateTime(time + " 23:59:59");
+
+                    expression = expression.And(t => t.F_CreatorTime >= time1 & t.F_CreatorTime <= time2);
+                }
+                else if (selTime == "currentWeek")
+                {
+                    string time = DateTime.Now.AddDays(-7).ToShortDateString();
+                    DateTime time1 = Convert.ToDateTime(time + " 0:00:00");  // 数字前 记得 加空格
+                    DateTime time2 = Convert.ToDateTime(time + " 23:59:59");
+
+                    expression = expression.And(t => t.F_CreatorTime >= time1 & t.F_CreatorTime <= time2);
+                }
+                else if (selTime == "currentMonth")
+                {
+                    string time = DateTime.Now.AddDays(-30).ToShortDateString();
+                    DateTime time1 = Convert.ToDateTime(time + " 0:00:00");  // 数字前 记得 加空格
+                    DateTime time2 = Convert.ToDateTime(time + " 23:59:59");
+                    expression = expression.And(t => t.F_CreatorTime >= time1 & t.F_CreatorTime <= time2);
+                }
             }
             return service.FindList(expression, pagination);
         }
