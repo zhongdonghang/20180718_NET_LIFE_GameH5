@@ -32,11 +32,6 @@ namespace NFine.Web.Areas.Games
                 records = pagination.records
             };
             return Content(data.ToJson());
-             
-
-
-            //var data = gameLogApp.GetList(keyword);
-            //return Content(data.ToJson());
         }
 
     }

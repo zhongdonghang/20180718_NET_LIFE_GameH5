@@ -3,6 +3,7 @@ using NFine.Code;
 using NFine.Domain._03_Entity.T_Game.Report;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,10 @@ namespace NFine.Application.TGame
     /// </summary>
    public class DataReportApp
     {
+        /// <summary>
+        /// 首页顶部
+        /// </summary>
+        /// <returns></returns>
         public static IndexTopReport ToIndexTopReport()
         {
             IndexTopReport obj = null;
@@ -58,6 +63,32 @@ namespace NFine.Application.TGame
                 objCache.WriteCache<IndexTopReport>(obj, "IndexTopReport");
             }
             return obj;
+        }
+
+        public static RealTimeActivePlayerStatisticsReport ToIndexRealTimeActivePlayerStatisticsReport()
+        {
+            string time = DateTime.Now.ToShortDateString();
+            RealTimeActivePlayerStatisticsReport report = new RealTimeActivePlayerStatisticsReport();
+            report.items = new List<RealTimeActiveItem>();
+            for (int i = 0; i <= 23; i++)
+            {
+                int beginTime = i;
+                int endTime = i + 1;
+                if (endTime == 24) endTime = 0;
+                string sql = "select F_GameNo,COUNT(F_LBAccount) as playerCount from dbo.T_GameLog where F_LogTime >= '" + time + " "+beginTime+":00:00' and F_LogTime< '"+ time + " "+endTime+":00:00'  group by F_GameNo";
+                using (SqlDataReader reader = SqlHelper.ExecuteReader(System.Data.CommandType.Text, sql, null))
+                {
+                    while (reader.Read())
+                    {
+                        RealTimeActiveItem item = new RealTimeActiveItem();
+                        item.EGameName = reader["F_GameNo"].ToString();
+                        item.PlayerCounts = reader["playerCount"].ToString();
+                        item.HourString = endTime.ToString();
+                        report.items.Add(item);
+                    }
+                }
+            }
+            return report;
         }
     }
 }

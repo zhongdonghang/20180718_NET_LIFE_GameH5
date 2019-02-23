@@ -759,7 +759,7 @@
     <Content Include="Views\GameList\GameSetting.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\2.pubxml" />
+    <None Include="Properties\PublishProfiles\1.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

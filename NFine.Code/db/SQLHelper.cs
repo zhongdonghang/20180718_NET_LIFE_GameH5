@@ -100,6 +100,7 @@ namespace Maticsoft.DBUtility
             return val;
         }
 
+
         /// <summary>
         /// Execute a SqlCommand that returns a resultset against the database specified in the connection string 
         /// using the provided parameters.

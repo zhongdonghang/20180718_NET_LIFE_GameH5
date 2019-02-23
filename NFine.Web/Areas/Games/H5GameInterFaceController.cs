@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace NFine.Web.Areas.Games
 {
@@ -20,9 +21,9 @@ namespace NFine.Web.Areas.Games
         public string ScoreRuleDesc { get; set; }
     }
 
-    public class H5GameInterFaceController
+    public class H5GameInterFaceController: Controller
     {
-        public string GetGameDesc(string gameName,string LBCount)
+        public string GetGameDesc(string gameName,string LBAccount)
         {
             DataEntity o = new DataEntity();
             o.AllPlayerBestScore = "10000";
@@ -30,7 +31,7 @@ namespace NFine.Web.Areas.Games
             o.AllPlayerCount = "6666";
             o.GameDesc = "游戏介绍";
             o.ScoreRuleDesc = "积分规则介绍";
-            return Json.ToJson(new DataEntity()) ;
+            return NFine.Code.Json.ToJson(o) ;
         }
 
 
