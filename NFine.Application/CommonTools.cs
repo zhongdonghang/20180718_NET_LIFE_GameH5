@@ -51,18 +51,18 @@ namespace NFine.Application
         /// <param name="coinType">消耗积分类型 1:LoveBird积分 2:LB积分</param>
         /// <param name="setting">游戏表里设置字段的json对象</param>
         /// <returns></returns>
-        public static int GameScore2LifeScore(int gameScore,int coinType, JObject setting)
+        public static double GameScore2LifeScore(int gameScore,int coinType, JObject setting)
         {
-            int LifeScore = 0;
+            double LifeScore = 0;
             if (coinType == 2)
             {
-                int LBRatio = int.Parse(setting["LBRatio"].ToString());
+                double LBRatio = double.Parse(setting["LBRatio"].ToString());
                 //LB积分和游戏分数比例，即1个LB积分等于游戏的多少分数
                 LifeScore = gameScore / LBRatio;
             }
             else if (coinType == 1)
             {
-                int LoveBirdRatio = int.Parse(setting["LoveBirdRatio"].ToString());
+                double LoveBirdRatio = double.Parse(setting["LoveBirdRatio"].ToString());
                 LifeScore = gameScore / LoveBirdRatio;
             }
             return LifeScore;

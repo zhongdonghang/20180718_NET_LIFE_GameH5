@@ -312,8 +312,8 @@ namespace NFine.Web.Areas.Games
                     //计算税收
                     double Tax = double.Parse(setting["Tax"].ToString());
                     //按兑换比例计算实际得分（LB或者LoveBird）
-                    int tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
-                    log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
+                    double tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                    log.F_Score = (int)(tmpLifeScore - ((double)tmpLifeScore * Tax)); //扣税得分
                     log.F_Tax = ((double)tmpLifeScore * Tax); //税金
 
                     log.F_GameScore = int.Parse(currentScore);
@@ -352,7 +352,7 @@ namespace NFine.Web.Areas.Games
                     log.F_LBAccount = LBAccount;
                     log.F_LogNo = userID;
                     log.F_GameNo = "se";
-                    log.F_Score = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);
+                    log.F_Score = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);
                     log.F_GameScore = int.Parse(currentScore);
                     log.F_CoinType = F_CoinType;
                     log.F_WinOrLost = 2;
@@ -394,7 +394,7 @@ namespace NFine.Web.Areas.Games
                 //计算税收
                 double Tax = double.Parse(setting["Tax"].ToString());
                 //按兑换比例计算实际得分（LB或者LoveBird）
-                int tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
                 log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
                 log.F_Tax = ((double)tmpLifeScore * Tax); //税金
 
@@ -544,7 +544,7 @@ namespace NFine.Web.Areas.Games
                     //计算税收
                     double Tax = double.Parse(setting["Tax"].ToString());
                     //按兑换比例计算实际得分（LB或者LoveBird）
-                    int tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                    int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
                     log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
                     log.F_Tax = ((double)tmpLifeScore * Tax); //税金
 
@@ -583,7 +583,7 @@ namespace NFine.Web.Areas.Games
                     log.F_LBAccount = LBAccount;
                     log.F_LogNo = userID;
                     log.F_GameNo = "XXK";
-                    log.F_Score = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting); //int.Parse(currentScore);
+                    log.F_Score = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting); //int.Parse(currentScore);
                     log.F_GameScore = int.Parse(currentScore);
                     log.F_CoinType = F_CoinType;
                     log.F_WinOrLost = 2;
@@ -628,7 +628,7 @@ namespace NFine.Web.Areas.Games
                 //计算税收
                 double Tax = double.Parse(setting["Tax"].ToString());
                 //按兑换比例计算实际得分（LB或者LoveBird）
-                int tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
                 log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
                 log.F_Tax = ((double)tmpLifeScore * Tax); //税金
                 log.F_GameScore = int.Parse(currentScore);
