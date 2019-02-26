@@ -770,6 +770,7 @@ namespace NFine.Web.Areas.Games
             {
                 times = Request["times"].Trim();
                 double timeSeconds = double.Parse(times);
+                timeSeconds /= 1000;
                 int RuleScore = 0;
                 if (timeSeconds <= double.Parse(setting["Rule1"]["Times"].ToString()))//第一级别
                 {

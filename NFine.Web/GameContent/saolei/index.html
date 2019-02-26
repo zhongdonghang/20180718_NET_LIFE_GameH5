@@ -115,14 +115,14 @@
             //var domain = ["oixm.cn", "hiemma.cn", "peagame.net"][parseInt(Math.random() * 3)];
 			//window.shareData.timeLineLink = "http://"+ parseInt(Math.random()*100000) +"."+ myData.gameid +"."+domain+"/gamecenter.html?gameid=" + myData.gameid + (localStorage.myuid ? "&uid=" + localStorage.myuid : "");
             function dp_submitScore(score) {
-                alert(score);
+               // alert(score);
 				myData.score = parseInt(score);
 				myData.scoreName = (score/1000)+"秒完?";
-				if(score>0){
-					if (confirm("您只用了"+(score/1000)+"秒，就完工了，炫耀一下给小伙伴看看吧?")){
-						setTimeout(dp_share,500);
-					}
-				}
+				//if(score>0){
+				//	if (confirm("您只用了"+(score/1000)+"秒，就完工了，炫耀一下给小伙伴看看吧?")){
+				//		setTimeout(dp_share,500);
+				//	}
+				//}
 			}
 			function onShareComplete(res) {
                 if (localStorage.myuid && myData.score != undefined) {
