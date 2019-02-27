@@ -158,6 +158,8 @@ namespace NFine.Web.Areas.Games
             string txtLowestPlayLBForSe = Request["txtLowestPlayLBForSe"].Trim();
             string txtLowestPlayLoveBirdForSe = Request["txtLowestPlayLoveBirdForSe"].Trim();
             string txtTax = Request["txtGameSeTax"].Trim();
+
+
             SeSetting setting = new SeSetting();
             setting.GameName = txtGameSeName;
             setting.LBRatio = double.Parse(txtGameSeScoreForLB);
