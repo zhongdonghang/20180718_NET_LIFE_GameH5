@@ -98,7 +98,7 @@ Game.prototype.cellClick = function(event) {
     } else {
         game.showCellAround(cell);
         if (game.clickNum == BLANK_NUM) {
-            alert("win");
+          //  alert("win");
             game.winGame();
         }
     }
@@ -106,20 +106,19 @@ Game.prototype.cellClick = function(event) {
 Game.prototype.winGame = function() {
     var time = $(".current>span").text();
     time = parseInt(time * 1000);
+  //  alert(time);
+    //赢了
+    $.ajax({
+        url: "/Games/SaoLeiResultHandle?result=win&times=" + time,
+        type: "post",
+        dataType: "text",
+        success: function (data) {
+            alert(data);
+        }
+    });
     if (time < this.best || this.best < 1) {
         this.setBestTime(time);
         STORAGE.save("best", time);
-
-        //赢了
-            $.ajax({
-                url: "/Games/SaoLeiResultHandle?result=win&times=" + time,
-                type: "post",
-                dataType: "text",
-                success: function (data) {
-                    alert(data);
-                }
-            });
-        
     }
     this.showEnding(STATE_WIN);
 	dp_submitScore(time);

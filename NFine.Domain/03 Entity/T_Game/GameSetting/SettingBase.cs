@@ -40,5 +40,10 @@ namespace NFine.Domain._03_Entity.T_Game.GameSetting
         /// 税收比例，这里是一个数字
         /// </summary>
         public double Tax { get; set; }
+
+        /// <summary>
+        /// 入场扣除LB分数
+        /// </summary>
+        public double PlayLBPay { get; set; }
     }
 }
