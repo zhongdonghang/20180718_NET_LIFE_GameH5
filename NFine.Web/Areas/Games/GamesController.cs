@@ -203,13 +203,14 @@ namespace NFine.Web.Areas.Games
         {
             base.CheckUserLogin();
             base.CheckLBOrLoveBird();
-
             Session["loginID"] = Request.Params["loginID"];
             Session["userID"] = Request.Params["userID"];
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
-
             //判断是不是有足够币来进行游戏
             base.IsEnoughScoreToPlay("2");
+
+            //扣除入场分
+            PayScoreForBeginGame("2", Session["userID"].ToString());
             return new RedirectResult("/GameContent/se/index.html");
         }
 
@@ -287,14 +288,23 @@ namespace NFine.Web.Areas.Games
                     app.SubmitForm(log, string.Empty);
 
                     //积分操作
-                    if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                    if (LB2LoveBird("2", userID, log.F_Score.ToString()))
                     {
-                        ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
                     }
                     else
                     {
                         ret = "网络错误，赠送积分失败";
                     }
+
+                    //if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                    //{
+                    //    ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                    //}
+                    //else
+                    //{
+                    //    ret = "网络错误，赠送积分失败";
+                    //}
                 }
                 else //Lost
                 {
@@ -367,9 +377,10 @@ namespace NFine.Web.Areas.Games
                 log.F_LastModifyTime = null;
                 app.SubmitForm(log, string.Empty);
 
-                if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                //积分操作
+                if (LB2LoveBird("2", userID, log.F_Score.ToString()))
                 {
-                    ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
                 }
                 else
                 {
@@ -395,6 +406,8 @@ namespace NFine.Web.Areas.Games
 
             //判断是不是有足够币来进行游戏
             base.IsEnoughScoreToPlay("3");
+            //扣除入场分
+            PayScoreForBeginGame("3", Session["userID"].ToString());
             return new RedirectResult("/GameContent/xxk1000/index.html");
         }
 
@@ -469,9 +482,9 @@ namespace NFine.Web.Areas.Games
                     app.SubmitForm(log, string.Empty);
 
                     //积分操作
-                    if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                    if (LB2LoveBird("3", userID, log.F_Score.ToString()))
                     {
-                        ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
                     }
                     else
                     {
@@ -552,9 +565,10 @@ namespace NFine.Web.Areas.Games
                 app.SubmitForm(log, string.Empty);
 
 
-                if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                //积分操作
+                if (LB2LoveBird("3", userID, log.F_Score.ToString()))
                 {
-                    ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
                 }
                 else
                 {
@@ -580,6 +594,8 @@ namespace NFine.Web.Areas.Games
 
             //判断是不是有足够币来进行游戏
             base.IsEnoughScoreToPlay("4");
+            //扣除入场分
+            PayScoreForBeginGame("4", Session["userID"].ToString());
             return new RedirectResult("/GameContent/saolei/index.html");
         }
 
@@ -667,9 +683,10 @@ namespace NFine.Web.Areas.Games
                 log.F_LastModifyTime = null;
                 app.SubmitForm(log, string.Empty);
 
-                if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                //积分操作
+                if (LB2LoveBird("4", userID, log.F_Score.ToString()))
                 {
-                    ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
                 }
                 else
                 {
@@ -734,6 +751,8 @@ namespace NFine.Web.Areas.Games
 
             //判断是不是有足够币来进行游戏
             base.IsEnoughScoreToPlay("5");
+            //扣除入场分
+            PayScoreForBeginGame("5", Session["userID"].ToString());
             return new RedirectResult("/GameContent/mspt/index.html");
         }
 
@@ -806,9 +825,10 @@ namespace NFine.Web.Areas.Games
                 log.F_LastModifyTime = null;
                 app.SubmitForm(log, string.Empty);
 
-                if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                //积分操作
+                if (LB2LoveBird("5", userID, log.F_Score.ToString()))
                 {
-                    ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
                 }
                 else
                 {
@@ -914,6 +934,8 @@ namespace NFine.Web.Areas.Games
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
             //判断是不是有足够币来进行游戏
             base.IsEnoughScoreToPlay("6");
+            //扣除入场分
+            PayScoreForBeginGame("6", Session["userID"].ToString());
             return new RedirectResult("/GameContent/sst/index.html");
         }
 
@@ -1016,9 +1038,10 @@ namespace NFine.Web.Areas.Games
                 log.F_LastModifyTime = null;
                 app.SubmitForm(log, string.Empty);
 
-                if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                //积分操作
+                if (LB2LoveBird("6", userID, log.F_Score.ToString()))
                 {
-                    ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
                 }
                 else
                 {
