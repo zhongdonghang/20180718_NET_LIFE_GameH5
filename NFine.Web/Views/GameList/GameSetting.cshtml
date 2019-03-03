@@ -75,36 +75,36 @@
                                         <input id="txtPlayLBPaySe" name="txtPlayLBPaySe" style="width:200px;" type="text" placeholder="输入入场的LB积分费用" />
                                     </td>
                                 </tr>
-                                <tr>
+                                @*<tr>
                                     <td  style="text-align:right">入场LoveBird积分费用</td>
                                     <td nowrap="nowrap"  style="margin:10px;padding:10px;">
                                         <input id="txtPlayLoveBirdPaySe" name="txtPlayLoveBirdPaySe" style="width:200px;" type="text" placeholder="输入入场的LoveBird积分费用" />
                                     </td>
-                                </tr>
+                                </tr>*@
                                 <tr>
-                                    <td  style="text-align:right">LB积分兑换规则 :</td>
+                                    <td  style="text-align:right">积分兑换规则 :</td>
                                     <td  nowrap="nowrap"  style="margin:10px;padding:10px;">
-                                        1个LB积分等于<input id="txtGameSeScoreForLB" name="txtGameSeScoreForLB" style="width:50px;" type="text" placeholder="输入游戏积分" />游戏积分
+                                        1个积分等于<input id="txtGameSeScoreForLB" name="txtGameSeScoreForLB" style="width:50px;" type="text" placeholder="输入游戏积分" />游戏积分
                                     </td>
                                 </tr>
-                                <tr>
+                                @*<tr>
                                     <td  style="text-align:right">LoveBird积分兑换规则 :</td>
                                     <td nowrap="nowrap"  style="margin:10px;padding:10px;">
                                             1个LoveBird积分等于 <input id="txtGameSeScoreForLoveBird" name="txtGameSeScoreForLoveBird" style="width:50px;" type="text" placeholder="输入游戏积分" />游戏积分
                                     </td>
-                                </tr>
+                                </tr>*@
                                 <tr>
                                     <td  style="text-align:right" >最低入场的LB积分数量 :</td>
                                     <td nowrap="nowrap"  style="margin:10px;padding:10px;">
                                        <input id="txtLowestPlayLBForSe" name="txtLowestPlayLBForSe" style="width:200px;" type="text" placeholder="输入最低入场的LB积分数量" />
                                     </td>
                                 </tr>
-                                <tr>
+                                @*<tr>
                                     <td  style="text-align:right">最低入场的LoveBird积分数量 :</td>
                                     <td nowrap="nowrap"  style="margin:10px;padding:10px;">
                                         <input id="txtLowestPlayLoveBirdForSe" name="txtLowestPlayLoveBirdForSe" style="width:200px;" type="text" placeholder="输入最低入场的LoveBird积分数量" />
                                     </td>
-                                </tr>
+                                </tr>*@
                                 <tr>
                                     <td style="text-align:right">税收 :</td>
                                     <td nowrap="nowrap" style="margin:10px;padding:10px;">
@@ -129,8 +129,9 @@
                                     <td style="text-align:right">模式说明 :</td>
                                     <td nowrap="nowrap" style="margin:10px;padding:10px;">
                                             模式A：根据玩家历史最高分来定输赢<br />
-                                            1：玩家首次玩肯定是赢，游戏得多少分就按既定比例赠送LB/LoveBird积分.<br />
-                                            2: 后续每次玩得的分数，都跟自己历史最高分相比，高于等于最高分视为赢，则按既定比例赠送LB/Love Birdji积分。如果低于最高分，视为输，则按既定比例扣除LB/Love Birdji积分.
+                                            1：玩家首次玩肯定是赢，游戏得多少分就按既定比例赠送LoveBird积分.<br />
+                                            2: 后续每次玩得的分数，都跟自己历史最高分相比，高于等于最高分视为赢，则按既定比例赠送Love Bird积分。如果低于最高分，视为输，则按既定比例扣除LB积分.<br />
+                                            3：游戏中玩家赢了，应该赠送的LB积分将等比例赠送Love Bird积分。
                                     </td>
                                 </tr>
                             </table>
@@ -161,36 +162,36 @@
                                         <input id="txtPlayLBPayXXK" name="txtPlayLBPayXXK" style="width:200px;" type="text" placeholder="输入入场的LB积分费用" />
                                     </td>
                                 </tr>
-                                <tr>
+                                @*<tr>
                                     <td  style="text-align:right">入场LoveBird积分费用</td>
                                     <td nowrap="nowrap"  style="margin:10px;padding:10px;">
                                         <input id="txtPlayLoveBirdPayXXK" name="txtPlayLoveBirdPayXXK" style="width:200px;" type="text" placeholder="输入入场的LoveBird积分费用" />
                                     </td>
-                                </tr>
+                                </tr>*@
                                 <tr>
                                     <td style="text-align:right">LB积分兑换规则 :</td>
                                     <td nowrap="nowrap" style="margin:10px;padding:10px;">
                                         1个LB积分等于<input id="txtGameXXKScoreForLB" name="txtGameXXKScoreForLB" style="width:50px;" type="text" placeholder="输入游戏积分" />游戏积分
                                     </td>
                                 </tr>
-                                <tr>
+                                @*<tr>
                                     <td style="text-align:right">LoveBird积分兑换规则 :</td>
                                     <td nowrap="nowrap" style="margin:10px;padding:10px;">
                                         1个LoveBird积分等于 <input id="txtGameXXKScoreForLoveBird" name="txtGameXXKScoreForLoveBird" style="width:50px;" type="text" placeholder="输入游戏积分" />游戏积分
                                     </td>
-                                </tr>
+                                </tr>*@
                                 <tr>
                                     <td style="text-align:right">最低入场的LB积分数量 :</td>
                                     <td nowrap="nowrap" style="margin:10px;padding:10px;">
                                         <input id="txtLowestPlayLBForXXK" name="txtLowestPlayLBForXXK" style="width:200px;" type="text" placeholder="输入最低入场的LB积分数量" />
                                     </td>
                                 </tr>
-                                <tr>
+                                @*<tr>
                                     <td style="text-align:right">最低入场的LoveBird积分数量 :</td>
                                     <td nowrap="nowrap" style="margin:10px;padding:10px;">
                                         <input id="txtLowestPlayLoveBirdForXXK" name="txtLowestPlayLoveBirdForXXK" style="width:200px;" type="text" placeholder="输入最低入场的LoveBird积分数量" />
                                     </td>
-                                </tr>
+                                </tr>*@
                                 <tr>
                                     <td style="text-align:right">税收 :</td>
                                     <td nowrap="nowrap" style="margin:10px;padding:10px;">
@@ -247,12 +248,12 @@
                                     <input id="txtPlayLBPaySaolei" name="txtPlayLBPaySaolei" style="width:200px;" type="text" placeholder="输入入场的LB积分费用" />
                                 </td>
                             </tr>
-                            <tr>
+                            @*<tr>
                                 <td  style="text-align:right">入场LoveBird积分费用</td>
                                 <td nowrap="nowrap"  style="margin:10px;padding:10px;">
                                     <input id="txtPlayLoveBirdPaySaolei" name="txtPlayLoveBirdPaySaolei" style="width:200px;" type="text" placeholder="输入入场的LoveBird积分费用" />
                                 </td>
-                            </tr>
+                            </tr>*@
                             <tr>
                                 <td style="text-align:right">扣分规则</td>
                                 <td nowrap="nowrap" style="margin:10px;padding:10px;">
@@ -286,12 +287,12 @@
                                     <input id="txtLowestPlayLBForSL" name="txtLowestPlayLBForSL" style="width:200px;" type="text" placeholder="输入最低入场的LB积分数量" />
                                 </td>
                             </tr>
-                            <tr>
+                            @*<tr>
                                 <td style="text-align:right">最低入场的LoveBird积分数量 :</td>
                                 <td nowrap="nowrap" style="margin:10px;padding:10px;">
                                     <input id="txtLowestPlayLoveBirdForSL" name="txtLowestPlayLoveBirdForSL" style="width:200px;" type="text" placeholder="输入最低入场的LoveBird积分数量" />
                                 </td>
-                            </tr>
+                            </tr>*@
                             <tr>
                                 <td style="text-align:right">税收 :</td>
                                 <td nowrap="nowrap" style="margin:10px;padding:10px;">
@@ -324,12 +325,12 @@
                                     <input id="txtPlayLBPayPT" name="txtPlayLBPayPT" style="width:200px;" type="text" placeholder="输入入场的LB积分费用" />
                                 </td>
                             </tr>
-                            <tr>
+                            @*<tr>
                                 <td  style="text-align:right">入场LoveBird积分费用</td>
                                 <td nowrap="nowrap"  style="margin:10px;padding:10px;">
                                     <input id="txtPlayLoveBirdPayPT" name="txtPlayLoveBirdPayPT" style="width:200px;" type="text" placeholder="输入入场的LoveBird积分费用" />
                                 </td>
-                            </tr>
+                            </tr>*@
                             <tr>
                                 <td style="text-align:right">关卡1设定</td>
                                 <td nowrap="nowrap" style="margin:10px;padding:10px;">
@@ -412,12 +413,12 @@
                                     <input id="txtLowestPlayLBForMN" name="txtLowestPlayLBForMN" style="width:200px;" type="text" placeholder="输入最低入场的LB积分数量" />
                                 </td>
                             </tr>
-                            <tr>
+                            @*<tr>
                                 <td style="text-align:right">最低入场的LoveBird积分数量 :</td>
                                 <td nowrap="nowrap" style="margin:10px;padding:10px;">
                                     <input id="txtLowestPlayLoveBirdForMN" name="txtLowestPlayLoveBirdForMN" style="width:200px;" type="text" placeholder="输入最低入场的LoveBird积分数量" />
                                 </td>
-                            </tr>
+                            </tr>*@
                             <tr>
                                 <td style="text-align:right">税收 :</td>
                                 <td nowrap="nowrap" style="margin:10px;padding:10px;">
@@ -453,12 +454,12 @@
                                     <input id="txtPlayLBPaySST" name="txtPlayLBPaySST" style="width:200px;" type="text" placeholder="输入入场的LB积分费用" />
                                 </td>
                             </tr>
-                            <tr>
+                            @*<tr>
                                 <td  style="text-align:right">入场LoveBird积分费用</td>
                                 <td nowrap="nowrap"  style="margin:10px;padding:10px;">
                                     <input id="txtPlayLoveBirdPaySST" name="txtPlayLoveBirdPaySST" style="width:200px;" type="text" placeholder="输入入场的LoveBird积分费用" />
                                 </td>
-                            </tr>
+                            </tr>*@
                             <tr>
                                 <td style="text-align:right">得分设置1</td>
                                 <td nowrap="nowrap" style="margin:10px;padding:10px;">
@@ -494,12 +495,12 @@
                                     <input id="txtLowestPlayLBForSST" name="txtLowestPlayLBForSST" style="width:200px;" type="text" placeholder="输入最低入场的LB积分数量" />
                                 </td>
                             </tr>
-                            <tr>
+                            @*<tr>
                                 <td style="text-align:right">最低入场的LoveBird积分数量 :</td>
                                 <td nowrap="nowrap" style="margin:10px;padding:10px;">
                                     <input id="txtLowestPlayLoveBirdForSST" name="txtLowestPlayLoveBirdForSST" style="width:200px;" type="text" placeholder="输入最低入场的LoveBird积分数量" />
                                 </td>
-                            </tr>
+                            </tr>*@
                             <tr>
                                 <td style="text-align:right">税收 :</td>
                                 <td nowrap="nowrap" style="margin:10px;padding:10px;">
@@ -646,6 +647,7 @@
         $("#txtLowestPlayLBForSe").val('@ViewBag.LowestPlayLB');
         $("#txtLowestPlayLoveBirdForSe").val('@ViewBag.LowestPlayLoveBird');
         $("#txtGameSeTax").val('@ViewBag.SeTax');
+        $("#txtPlayLBPaySe").val('@ViewBag.PlayLBPaySe');
 
         //消消看显示
         $("#txtGameXXKName").val('@ViewBag.XXKGameName');
@@ -654,6 +656,7 @@
         $("#txtLowestPlayLBForXXK").val('@ViewBag.XXKLowestPlayLB');
         $("#txtLowestPlayLoveBirdForXXK").val('@ViewBag.XXKLowestPlayLoveBird');
         $("#txtGameXXKTax").val('@ViewBag.XXKTax');
+        $("#txtPlayLBPayXXK").val('@ViewBag.PlayLBPayXXK');
 
         //扫雷显示
         $("#txtGameSaoLeiName").val('@ViewBag.txtGameSaoLeiName');
@@ -667,7 +670,7 @@
         $("#txtLowestPlayLBForSL").val('@ViewBag.txtLowestPlayLBForSL');
         $("#txtLowestPlayLoveBirdForSL").val('@ViewBag.txtLowestPlayLoveBirdForSL');
         $("#txtGameSLTax").val('@ViewBag.txtGameSLTax');
-
+        $("#txtPlayLBPaySaolei").val('@ViewBag.txtPlayLBPaySaolei');
         //美女拼图显示
         $("#txtGameMNName").val('@ViewBag.txtGameMNName');
 
@@ -706,7 +709,7 @@
         $("#txtLowestPlayLBForMN").val('@ViewBag.txtLowestPlayLBForMN');
         $("#txtLowestPlayLoveBirdForMN").val('@ViewBag.txtLowestPlayLoveBirdForMN');
         $("#txtGameMNTax").val('@ViewBag.txtGameMNTax');
-
+        $("#txtPlayLBPayPT").val('@ViewBag.txtPlayLBPayPT');
         //疯狂算术题显示
 		$("#txtGameSSTName").val('@ViewBag.txtGameSSTName');
         $("#txtGameSSTWinCount1").val('@ViewBag.txtGameSSTWinCount1');
@@ -720,6 +723,7 @@
         $("#txtLowestPlayLBForSST").val('@ViewBag.txtLowestPlayLBForSST');
         $("#txtLowestPlayLoveBirdForSST").val('@ViewBag.txtLowestPlayLoveBirdForSST');
         $("#txtGameSSTTax").val('@ViewBag.txtGameSSTTax');
+        $("#txtPlayLBPaySST").val('@ViewBag.txtPlayLBPaySST');
 
     });
 
