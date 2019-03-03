@@ -246,7 +246,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值'); history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }
@@ -255,7 +255,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }
@@ -312,8 +312,8 @@ namespace NFine.Web.Areas.Games
                     //计算税收
                     double Tax = double.Parse(setting["Tax"].ToString());
                     //按兑换比例计算实际得分（LB或者LoveBird）
-                    int tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
-                    log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
+                    double tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                    log.F_Score = (int)(tmpLifeScore - ((double)tmpLifeScore * Tax)); //扣税得分
                     log.F_Tax = ((double)tmpLifeScore * Tax); //税金
 
                     log.F_GameScore = int.Parse(currentScore);
@@ -352,7 +352,7 @@ namespace NFine.Web.Areas.Games
                     log.F_LBAccount = LBAccount;
                     log.F_LogNo = userID;
                     log.F_GameNo = "se";
-                    log.F_Score = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);
+                    log.F_Score = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);
                     log.F_GameScore = int.Parse(currentScore);
                     log.F_CoinType = F_CoinType;
                     log.F_WinOrLost = 2;
@@ -394,7 +394,7 @@ namespace NFine.Web.Areas.Games
                 //计算税收
                 double Tax = double.Parse(setting["Tax"].ToString());
                 //按兑换比例计算实际得分（LB或者LoveBird）
-                int tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
                 log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
                 log.F_Tax = ((double)tmpLifeScore * Tax); //税金
 
@@ -480,7 +480,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }
@@ -489,7 +489,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }
@@ -544,7 +544,7 @@ namespace NFine.Web.Areas.Games
                     //计算税收
                     double Tax = double.Parse(setting["Tax"].ToString());
                     //按兑换比例计算实际得分（LB或者LoveBird）
-                    int tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                    int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
                     log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
                     log.F_Tax = ((double)tmpLifeScore * Tax); //税金
 
@@ -583,7 +583,7 @@ namespace NFine.Web.Areas.Games
                     log.F_LBAccount = LBAccount;
                     log.F_LogNo = userID;
                     log.F_GameNo = "XXK";
-                    log.F_Score = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting); //int.Parse(currentScore);
+                    log.F_Score = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting); //int.Parse(currentScore);
                     log.F_GameScore = int.Parse(currentScore);
                     log.F_CoinType = F_CoinType;
                     log.F_WinOrLost = 2;
@@ -628,7 +628,7 @@ namespace NFine.Web.Areas.Games
                 //计算税收
                 double Tax = double.Parse(setting["Tax"].ToString());
                 //按兑换比例计算实际得分（LB或者LoveBird）
-                int tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
                 log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
                 log.F_Tax = ((double)tmpLifeScore * Tax); //税金
                 log.F_GameScore = int.Parse(currentScore);
@@ -715,7 +715,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }
@@ -724,7 +724,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }
@@ -770,6 +770,7 @@ namespace NFine.Web.Areas.Games
             {
                 times = Request["times"].Trim();
                 double timeSeconds = double.Parse(times);
+                timeSeconds /= 1000;
                 int RuleScore = 0;
                 if (timeSeconds <= double.Parse(setting["Rule1"]["Times"].ToString()))//第一级别
                 {
@@ -918,7 +919,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }
@@ -927,7 +928,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }
@@ -1150,7 +1151,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }
@@ -1159,7 +1160,7 @@ namespace NFine.Web.Areas.Games
                 isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
                 if (!isTrue)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');</script></head><body></body></html>");
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
                     Response.End();
                 }
             }

@@ -7,6 +7,7 @@ function play68_submitScore(score) {
 	//setTimeout( function() { Play68.shareFriend(); }, 1000 )
 }
 function updateShare(score, a) {
+    //alert(score);
     if (score > 0)
     {
         $.ajax({

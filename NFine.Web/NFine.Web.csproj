@@ -128,6 +128,7 @@
     <Compile Include="Areas\Games\GameListController.cs" />
     <Compile Include="Areas\Games\GameLogController.cs" />
     <Compile Include="Areas\Games\GamesController.cs" />
+    <Compile Include="Areas\Games\H5GameInterFaceController.cs" />
     <Compile Include="Areas\ReportManage\Controllers\EchartsController.cs" />
     <Compile Include="Areas\ReportManage\Controllers\HighchartsController.cs" />
     <Compile Include="Areas\ReportManage\ReportManageAreaRegistration.cs" />
@@ -758,6 +759,7 @@
     <Content Include="Views\GameList\GameSetting.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\1.pubxml" />
     <None Include="Properties\PublishProfiles\2.pubxml" />
   </ItemGroup>
   <PropertyGroup>

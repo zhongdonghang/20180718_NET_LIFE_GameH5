@@ -36,7 +36,7 @@
                             return "美女拼图";
                         }
                         if (cellvalue == "sst") {
-                            return "疯狂算术题";
+                            return "疯狂算数题";
                         }
                     }
                 },
@@ -70,17 +70,70 @@
                 { label: '记录时间', name: 'F_LogTime', width: 150, align: 'left' },
                 { label: '备注', name: 'F_Remark', width: 300, align: 'left' }
 
-            ]
+            ],
+            pager: "#gridPager",
+            sortname: 'F_LogTime desc',
+            viewrecords: true
         });
         $("#btn_search").click(function () {
             $gridList.jqGrid('setGridParam', {
-                postData: { keyword: $("#txt_keyword").val() },
+                postData: { keyword: $("#txt_keyword").val(), selGame: $("#selGame").val(), selWinOrLost: $("#selWinOrLost").val(), selTime: $("#selTime").val() },
             }).trigger('reloadGrid');
         });
     }
 
 </script>
 
+<div class="topPanel">
+    
+    <div class="search">
+        <table style="padding:10px; margin:10px;">
+            <tr>
+                <td>
+                    <div class="input-group">
+                        <select id="selGame" class="form-control" style="width:200px;">
+                            <option value="0">过滤游戏</option>
+                            <option value="se">看你有多色</option>
+                            <option value="XXK">消消看</option>
+                            <option value="saolei">扫雷</option>
+                            <option value="mspt">美女拼图</option>
+                            <option value="sst">疯狂算术</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <select id="selWinOrLost" class="form-control" style="width:100px;">
+                            <option value="0">过滤游戏结果</option>
+                            <option value="1">赢</option>
+                            <option value="2">输</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <select id="selTime" class="form-control" style="width:100px;">
+                            <option value="0">选择时间</option>
+                            <option value="currentDate">今天</option>
+                            <option value="currentWeek">本周</option>
+                            <option value="currentMonth">当月</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <input id="txt_keyword" type="text" class="form-control" placeholder="LB账号" style="width: 200px;">
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
 <div class="gridPanel">
     <table id="gridList"></table>
+    <div id="gridPager"></div>
 </div>

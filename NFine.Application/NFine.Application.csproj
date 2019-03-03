@@ -61,6 +61,7 @@
     <Compile Include="SystemSecurity\DbBackupApp.cs" />
     <Compile Include="SystemSecurity\FilterIPApp.cs" />
     <Compile Include="SystemSecurity\LogApp.cs" />
+    <Compile Include="TGame\DataReportApp.cs" />
     <Compile Include="TGame\TGameApp.cs" />
     <Compile Include="TGame\TGameLogApp.cs" />
   </ItemGroup>
