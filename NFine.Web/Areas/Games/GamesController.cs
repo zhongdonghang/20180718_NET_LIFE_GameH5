@@ -5,6 +5,7 @@ using NFine.Application.TGameLog;
 using NFine.Domain._03_Entity.T_Game.GameSetting;
 using NFine.Domain.Entity.TGame;
 using NFine.Domain.Entity.TGameLog;
+using NFine.Web.App_Start._01_Handler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ using System.Web.Mvc;
 
 namespace NFine.Web.Areas.Games
 {
-    public class GamesController : Controller
+    public class GamesController : GameBaseController
     {
         //
         // GET: /Games/Games/
@@ -200,65 +201,15 @@ namespace NFine.Web.Areas.Games
         //loginID=LB33255558&userID=556f3452-5eb0-42e1-b1de-e5b5daa544b1&LBOrLoveBird=LB
         public ActionResult Se()
         {
-            if (Request.Params["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["loginID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Request.Params["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["userID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-
-            if (Request.Params["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["LBOrLoveBird"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
+            base.CheckUserLogin();
+            base.CheckLBOrLoveBird();
 
             Session["loginID"] = Request.Params["loginID"];
             Session["userID"] = Request.Params["userID"];
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
 
             //判断是不是有足够币来进行游戏
-            TGameEntity entity = gameApp.GetForm("2");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-
-            bool isTrue = false;
-            if (Session["LBOrLoveBird"].ToString() == "LB")//用LB进行游戏
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值'); history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
-            else
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
+            base.IsEnoughScoreToPlay("2");
             return new RedirectResult("/GameContent/se/index.html");
         }
 
@@ -435,64 +386,15 @@ namespace NFine.Web.Areas.Games
         //loginID=LB33255558&userID=556f3452-5eb0-42e1-b1de-e5b5daa544b1&LBOrLoveBird=LB
         public ActionResult XXK()
         {
-            if (Request.Params["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["loginID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Request.Params["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["userID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
+            base.CheckUserLogin();
+            base.CheckLBOrLoveBird();
 
-            if (Request.Params["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["LBOrLoveBird"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
             Session["loginID"] = Request.Params["loginID"];
             Session["userID"] = Request.Params["userID"];
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
 
             //判断是不是有足够币来进行游戏
-            TGameEntity entity = gameApp.GetForm("3");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-
-            bool isTrue = false;
-            if (Session["LBOrLoveBird"].ToString() == "LB")//用LB进行游戏
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
-            else
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
+            base.IsEnoughScoreToPlay("3");
             return new RedirectResult("/GameContent/xxk1000/index.html");
         }
 
@@ -669,65 +571,15 @@ namespace NFine.Web.Areas.Games
         //loginID=LB33255558&userID=556f3452-5eb0-42e1-b1de-e5b5daa544b1&LBOrLoveBird=LB
         public ActionResult SaoLei()
         {
-            if (Request.Params["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["loginID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Request.Params["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["userID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-
-            if (Request.Params["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["LBOrLoveBird"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
+            base.CheckUserLogin();
+            base.CheckLBOrLoveBird();
 
             Session["loginID"] = Request.Params["loginID"];
             Session["userID"] = Request.Params["userID"];
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
 
             //判断是不是有足够币来进行游戏
-            TGameEntity entity = gameApp.GetForm("4");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-
-            bool isTrue = false;
-            if (Session["LBOrLoveBird"].ToString() == "LB")//用LB进行游戏
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
-            else
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
+            base.IsEnoughScoreToPlay("4");
             return new RedirectResult("/GameContent/saolei/index.html");
         }
 
@@ -873,65 +725,15 @@ namespace NFine.Web.Areas.Games
         //loginID=LB33255558&userID=556f3452-5eb0-42e1-b1de-e5b5daa544b1&LBOrLoveBird=LB
         public ActionResult MN()
         {
-            if (Request.Params["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["loginID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Request.Params["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["userID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-
-            if (Request.Params["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["LBOrLoveBird"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
+            base.CheckUserLogin();
+            base.CheckLBOrLoveBird();
 
             Session["loginID"] = Request.Params["loginID"];
             Session["userID"] = Request.Params["userID"];
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
 
             //判断是不是有足够币来进行游戏
-            TGameEntity entity = gameApp.GetForm("5");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-
-            bool isTrue = false;
-            if (Session["LBOrLoveBird"].ToString() == "LB")//用LB进行游戏
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
-            else
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
+            base.IsEnoughScoreToPlay("5");
             return new RedirectResult("/GameContent/mspt/index.html");
         }
 
@@ -1105,65 +907,13 @@ namespace NFine.Web.Areas.Games
         //loginID=LB33255558&userID=556f3452-5eb0-42e1-b1de-e5b5daa544b1&LBOrLoveBird=LB
         public ActionResult SST()
         {
-            if (Request.Params["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["loginID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Request.Params["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["userID"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-
-            if (Request.Params["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
-            else if (string.IsNullOrEmpty(Request.Params["LBOrLoveBird"]))
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('参数不对，请传入是消耗LB积分还是LoveBird积分');</script></head><body></body></html>");
-                Response.End();
-            }
-
+            base.CheckUserLogin();
+            base.CheckLBOrLoveBird();
             Session["loginID"] = Request.Params["loginID"];
             Session["userID"] = Request.Params["userID"];
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
-
             //判断是不是有足够币来进行游戏
-            TGameEntity entity = gameApp.GetForm("6");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-
-            bool isTrue = false;
-            if (Session["LBOrLoveBird"].ToString() == "LB")//用LB进行游戏
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
-            else
-            {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
-                if (!isTrue)
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
-                    Response.End();
-                }
-            }
+            base.IsEnoughScoreToPlay("6");
             return new RedirectResult("/GameContent/sst/index.html");
         }
 
