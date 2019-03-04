@@ -246,11 +246,12 @@ namespace NFine.Web.Areas.Games
             int F_CoinType = 2;
             if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
             if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
+            double maxScore = app.GetMaxScoreByAccount(LBAccount, F_CoinType, "se");
 
             if (app.GetGameLogByAccount(LBAccount, "se"))//不是第一次玩
             {
                 //取出历史最高分的记录
-                double maxScore = app.GetMaxScoreByAccount(LBAccount, F_CoinType,"se");
+                
                 //跟当前分数比，大于等于最高分，视为赢，赠送相应的积分,否则视为输
                 if (double.Parse(currentScore) >= maxScore)//大于等于历史最高分，win
                 {
@@ -304,7 +305,8 @@ namespace NFine.Web.Areas.Games
                     log.F_LBAccount = LBAccount;
                     log.F_LogNo = userID;
                     log.F_GameNo = "se";
-                    log.F_Score = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);
+                    double resultScore = maxScore - double.Parse(currentScore);
+                    log.F_Score = (int)CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting);
                     log.F_GameScore = int.Parse(currentScore);
                     log.F_CoinType = F_CoinType;
                     log.F_WinOrLost = 2;
@@ -491,7 +493,9 @@ namespace NFine.Web.Areas.Games
                     log.F_LBAccount = LBAccount;
                     log.F_LogNo = userID;
                     log.F_GameNo = "XXK";
-                    log.F_Score = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting); //int.Parse(currentScore);
+
+                    double resultScore = maxScore - double.Parse(currentScore); 
+                    log.F_Score = (int)CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting); //int.Parse(currentScore);
                     log.F_GameScore = int.Parse(currentScore);
                     log.F_CoinType = F_CoinType;
                     log.F_WinOrLost = 2;

@@ -59,12 +59,14 @@ namespace NFine.Application.TGame
                     case "se":
                     e.GameDesc = GAME_SE_DESC;
                     e.ScoreRuleDesc = string.Format("看看你有多色游戏，至少要有{0}LB积分才能玩哦！一个LB积分等于{1}游戏积分，赢家将被按百分之{2}的税率收取税金.开始游戏需要扣除{3}LB积分作为进场费用。"+
-                        " 游戏得分规则:如果你的分数比你的历史最高分高，那就多出那一部分分数按照跟LB积分的比例兑换后，扣除税率然后换成等比的LoveBird积分充值到你钱包账户。 ", json["LowestPlayLB"], json["LBRatio"], tax,json["PlayLBPay"]);
+                        " 游戏得分规则:如果你的分数比你的历史最高分高，那就多出那一部分分数按照跟LB积分的比例兑换后，扣除税率然后换成等比的LoveBird积分充值到你钱包账户。"+
+                        " 游戏扣分规则：如果你的分数比你的历史最高分低，那分差部分按照LB积分的兑换比例兑换后，直接扣除相应的LB积分数量。", json["LowestPlayLB"], json["LBRatio"], tax,json["PlayLBPay"]);
                         break;
                     case "XXK":
                     e.GameDesc = GAME_XXK_DESC;
                     e.ScoreRuleDesc = string.Format("消消看游戏，最低的进场LB积分门槛是{0}积分,一个LB积分等于{1}游戏积分，赢家将被按百分之{2}的税率收取税金.开始此游戏需要扣除{3}LB积分作为进场费用。"+
-                        " 游戏得分规则:如果你的分数比你的历史最高分高，那就多出那一部分分数按照跟LB积分的比例兑换后，扣除税率然后换成等比的LoveBird积分充值到你钱包账户。", json["LowestPlayLB"], json["LBRatio"], tax, json["PlayLBPay"]);
+                        " 游戏得分规则:如果你的分数比你的历史最高分高，那就多出那一部分分数按照跟LB积分的比例兑换后，扣除税率然后换成等比的LoveBird积分充值到你钱包账户。"+
+                        "游戏扣分规则：如果你的分数比你的历史最高分低，那分差部分按照LB积分的兑换比例兑换后，直接扣除相应的LB积分数量。 ", json["LowestPlayLB"], json["LBRatio"], tax, json["PlayLBPay"]);
                         break;
                     case "saolei":
                     e.GameDesc = GAME_SAOLEI_DESC;
