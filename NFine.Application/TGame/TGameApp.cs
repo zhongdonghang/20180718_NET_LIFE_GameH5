@@ -27,7 +27,7 @@ namespace NFine.Application.TGame
 
         #region 游戏描述
 
-        private const string GAME_SE_DESC = "大众类游戏，色盲者慎入！过一关游戏得一分，考验你眼力的时候来了，请不要眨眼睛哦，来，请开始你的表演！积分玩法，以你的最好成绩为准，超过你的最高分，视为赢得比赛，将按既定规则奖励LoveBird积分，否则扣除LB积分";
+        private const string GAME_SE_DESC = "大众类游戏，色盲者慎入！过一关游戏得一分，考验你眼力的时候来了，请不要眨眼睛哦，来，请开始你的表演！积分玩法，以你的最好成绩为准，超过你的最高分，视为赢得比赛，将按既定规则奖励LoveBird积分，否则扣除LB积分.";
         private const string GAME_XXK_DESC = "消除类游戏，消消乐游戏同款，挑战你的最高分吧！积分玩法，以你的最好成绩为准，超过你的最高分，视为赢得比赛，将按既定规则奖励LoveBird积分，否则扣除LB积分";
         private const string GAME_SAOLEI_DESC = "经典扫雷游戏，跟windows系统自带扫雷稍有区别，考验你逻辑能力的时刻来了，方块里数字1代表，周边有一个雷，数字2代表有两个雷，如此类推，请展示你真正的技术！积分规则，限时99秒，在这个时间内能扫清雷的，将获得LoveBird积分，踩到雷的将扣除积分，时间越快，获得LoveBird积分越多哦";
         private const string GAME_MSPT_DESC = "拼图雷游戏，总共有10关，每一个关卡都对成绩进行结算，每过一关将获得相应LoveBird积分，失败了则扣除LB积分，准备好了吗，Ready?。。。。。GO!";
@@ -58,15 +58,19 @@ namespace NFine.Application.TGame
                 {
                     case "se":
                     e.GameDesc = GAME_SE_DESC;
-                    e.ScoreRuleDesc = string.Format("看看你有多色游戏，最低的进场LB积分门槛是{0}积分,一个LB积分等于{1}游戏积分，赢家将被按百分之{2}的税率收取税金.", json["LowestPlayLB"], json["LBRatio"], tax);
+                    e.ScoreRuleDesc = string.Format("看看你有多色游戏，至少要有{0}LB积分才能玩哦！一个LB积分等于{1}游戏积分，赢家将被按百分之{2}的税率收取税金.开始游戏需要扣除{3}LB积分作为进场费用。"+
+                        " 游戏得分规则:如果你的分数比你的历史最高分高，那就多出那一部分分数按照跟LB积分的比例兑换后，扣除税率然后换成等比的LoveBird积分充值到你钱包账户。 ", json["LowestPlayLB"], json["LBRatio"], tax,json["PlayLBPay"]);
                         break;
                     case "XXK":
                     e.GameDesc = GAME_XXK_DESC;
-                    e.ScoreRuleDesc = string.Format("消消看游戏，最低的进场LB积分门槛是{0}积分,一个LB积分等于{1}游戏积分，赢家将被按百分之{2}的税率收取税金.", json["LowestPlayLB"], json["LBRatio"], tax);
+                    e.ScoreRuleDesc = string.Format("消消看游戏，最低的进场LB积分门槛是{0}积分,一个LB积分等于{1}游戏积分，赢家将被按百分之{2}的税率收取税金.开始此游戏需要扣除{3}LB积分作为进场费用。"+
+                        " 游戏得分规则:如果你的分数比你的历史最高分高，那就多出那一部分分数按照跟LB积分的比例兑换后，扣除税率然后换成等比的LoveBird积分充值到你钱包账户。", json["LowestPlayLB"], json["LBRatio"], tax, json["PlayLBPay"]);
                         break;
                     case "saolei":
                     e.GameDesc = GAME_SAOLEI_DESC;
-                    e.ScoreRuleDesc = string.Format("扫雷游戏，最低的进场LB积分门槛是{0}积分,赢家将被按百分之{1}的税率收取税金，输了将被扣除{2}个LB积分,{3}秒内扫雷成功，将获得{4}个LoveBird积分，{5}秒内扫雷成功，将获得{6}个LoveBird积分，{7}秒内扫雷成功，将获得{8}个LoveBird积分。", json["LowestPlayLB"], tax, json["LostScore"], json["Rule1"]["Times"], json["Rule1"]["Score"], json["Rule2"]["Times"], json["Rule2"]["Score"], json["Rule3"]["Times"], json["Rule3"]["Score"]);
+                    e.ScoreRuleDesc = string.Format("扫雷游戏，最低的进场LB积分门槛是{0}积分,赢家将被按百分之{1}的税率收取税金，输了将被扣除{2}个LB积分,{3}秒内扫雷成功，"+
+                        " 将获得{4}个LoveBird积分，{5}秒内扫雷成功，将获得{6}个LoveBird积分，{7}秒内扫雷成功，将获得{8}个LoveBird积分。开始此游戏需要扣除{9}LB积分作为进场费用。"+
+                        " ", json["LowestPlayLB"], tax, json["LostScore"], json["Rule1"]["Times"], json["Rule1"]["Score"], json["Rule2"]["Times"], json["Rule2"]["Score"], json["Rule3"]["Times"], json["Rule3"]["Score"], json["PlayLBPay"]);
                         break;
                     case "mspt":
                     e.GameDesc = GAME_MSPT_DESC;
@@ -81,7 +85,7 @@ namespace NFine.Application.TGame
                             " 通{21}关获得{22}个LoveBird积分,输了扣除{23}个LB积分," +
                             " 通{24}关获得{25}个LoveBird积分,输了扣除{26}个LB积分," +
                             " 通{27}关获得{28}个LoveBird积分,输了扣除{29}个LB积分," +
-                            " 通{30}关获得{31}个LoveBird积分,输了扣除{32}个LB积分。",
+                            " 通{30}关获得{31}个LoveBird积分,输了扣除{32}个LB积分。开始游戏需要扣除{33}LB积分作为进场费用。",
                             json["LowestPlayLB"], tax, json["ALlInScore"],
                            "1", json["Rule1"]["WinScore"], json["Rule1"]["LostScore"],
                            "2", json["Rule2"]["WinScore"], json["Rule2"]["LostScore"],
@@ -92,7 +96,8 @@ namespace NFine.Application.TGame
                            "7", json["Rule7"]["WinScore"], json["Rule7"]["LostScore"],
                            "8", json["Rule8"]["WinScore"], json["Rule8"]["LostScore"],
                            "9", json["Rule9"]["WinScore"], json["Rule9"]["LostScore"],
-                           "10", json["Rule10"]["WinScore"], json["Rule10"]["LostScore"]
+                           "10", json["Rule10"]["WinScore"], json["Rule10"]["LostScore"],
+                           json["PlayLBPay"]
                             );
                         break;
                     case "sst":
@@ -101,13 +106,13 @@ namespace NFine.Application.TGame
                             "做对{2}题，奖励LoveBird积分{3}个，" +
                             "做对{4}题，奖励LoveBird积分{5}个，" +
                             "做不到{6}题，扣除LB积分{7}个，" +
-                            "做不到{8}题，扣除LB积分{9}。" +
+                            "做不到{8}题，扣除LB积分{9}。开始游戏需要扣除{10}LB积分作为进场费用" +
                             " ",
                             json["LowestPlayLB"], tax,
                             json["WinLevel1"]["WinCount"], json["WinLevel1"]["WinScore"],
                             json["WinLevel2"]["WinCount"], json["WinLevel2"]["WinScore"],
                             json["LostLevel1"]["LostCount"], json["LostLevel1"]["LostScore"],
-                            json["LostLevel2"]["LostCount"], json["LostLevel2"]["LostScore"]
+                            json["LostLevel2"]["LostCount"], json["LostLevel2"]["LostScore"], json["PlayLBPay"]
                             );
                         break;
                 }

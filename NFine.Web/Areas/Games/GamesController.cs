@@ -261,14 +261,14 @@ namespace NFine.Web.Areas.Games
                     log.F_LogNo = userID;
                     log.F_GameNo = "se";
 
-                    //计算税收
-                    double Tax = double.Parse(setting["Tax"].ToString());
+                    double resultScore = double.Parse(currentScore) - maxScore; //计算实际得的游戏分
+                    double Tax = double.Parse(setting["Tax"].ToString());//取出税率
                     //按兑换比例计算实际得分（LB或者LoveBird）
-                    double tmpLifeScore = CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                    double tmpLifeScore = CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting);//原始得分
                     log.F_Score = (int)(tmpLifeScore - ((double)tmpLifeScore * Tax)); //扣税得分
                     log.F_Tax = ((double)tmpLifeScore * Tax); //税金
-
                     log.F_GameScore = int.Parse(currentScore);
+
                     log.F_CoinType = F_CoinType;
                     log.F_WinOrLost = 1;
                     log.F_LogState = 0;
@@ -296,15 +296,6 @@ namespace NFine.Web.Areas.Games
                     {
                         ret = "网络错误，赠送积分失败";
                     }
-
-                    //if (CommonTools.GiveCoinToPlayer(userID, log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
-                    //{
-                    //    ret = "你赢了！恭喜你获得" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
-                    //}
-                    //else
-                    //{
-                    //    ret = "网络错误，赠送积分失败";
-                    //}
                 }
                 else //Lost
                 {
@@ -458,11 +449,13 @@ namespace NFine.Web.Areas.Games
 
                     //计算税收
                     double Tax = double.Parse(setting["Tax"].ToString());
-                    //按兑换比例计算实际得分（LB或者LoveBird）
-                    int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+
+                    double resultScore = double.Parse(currentScore) - maxScore;
+
+                    int tmpLifeScore = (int)CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting);//原始得分
+
                     log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
                     log.F_Tax = ((double)tmpLifeScore * Tax); //税金
-
                     log.F_GameScore = int.Parse(currentScore);
                     log.F_CoinType = F_CoinType;
                     log.F_WinOrLost = 1;
@@ -672,7 +665,7 @@ namespace NFine.Web.Areas.Games
                 log.F_LogTime = DateTime.Now;
                 log.F_LogType = 0;
                 log.F_LogFlag = 0;
-                log.F_Remark = "扫雷赢了" + log.F_Score + "积分,用时" + times + "秒";
+                log.F_Remark = "扫雷赢了" + log.F_Score + "积分,用时" + timeSeconds + "秒";
                 log.F_MarkTime = DateTime.Now;
                 log.F_CreatorUserId = "system";
                 log.F_CreatorTime = DateTime.Now;
