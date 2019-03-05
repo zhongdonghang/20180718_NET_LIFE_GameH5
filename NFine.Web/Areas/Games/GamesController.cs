@@ -20,6 +20,7 @@ namespace NFine.Web.Areas.Games
         // GET: /Games/Games/
 
         TGameApp gameApp = new TGameApp();
+      string PersonGameMaxLoveBird =  System.Configuration.ConfigurationManager.AppSettings["PersonGameMaxLoveBird"].ToString();
 
         public ActionResult Index()
         {
@@ -288,14 +289,22 @@ namespace NFine.Web.Areas.Games
 
                     app.SubmitForm(log, string.Empty);
 
-                    //积分操作
-                    if (LB2LoveBird("2", userID, log.F_Score.ToString()))
+                    if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                     {
-                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度["+ PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                        Response.End();
                     }
                     else
                     {
-                        ret = "网络错误，赠送积分失败";
+                        //积分操作
+                        if (LB2LoveBird("2", userID, log.F_Score.ToString()))
+                        {
+                            ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        }
+                        else
+                        {
+                            ret = "网络错误，赠送积分失败";
+                        }
                     }
                 }
                 else //Lost
@@ -370,14 +379,21 @@ namespace NFine.Web.Areas.Games
                 log.F_LastModifyTime = null;
                 app.SubmitForm(log, string.Empty);
 
-                //积分操作
-                if (LB2LoveBird("2", userID, log.F_Score.ToString()))
+                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                 {
-                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                    Response.End();
                 }
                 else
                 {
-                    ret = "网络错误，赠送积分失败";
+                    if (LB2LoveBird("2", userID, log.F_Score.ToString()))
+                    {
+                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    }
+                    else
+                    {
+                        ret = "网络错误，赠送积分失败";
+                    }
                 }
             }
             return ret;
@@ -477,13 +493,21 @@ namespace NFine.Web.Areas.Games
                     app.SubmitForm(log, string.Empty);
 
                     //积分操作
-                    if (LB2LoveBird("3", userID, log.F_Score.ToString()))
+                    if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                     {
-                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                        Response.End();
                     }
                     else
                     {
-                        ret = "网络错误，赠送积分失败";
+                        if (LB2LoveBird("3", userID, log.F_Score.ToString()))
+                        {
+                            ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        }
+                        else
+                        {
+                            ret = "网络错误，赠送积分失败";
+                        }
                     }
                 }
                 else //Lost
@@ -563,13 +587,21 @@ namespace NFine.Web.Areas.Games
 
 
                 //积分操作
-                if (LB2LoveBird("3", userID, log.F_Score.ToString()))
+                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                 {
-                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                    Response.End();
                 }
                 else
                 {
-                    ret = "网络错误，赠送积分失败";
+                    if (LB2LoveBird("3", userID, log.F_Score.ToString()))
+                    {
+                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    }
+                    else
+                    {
+                        ret = "网络错误，赠送积分失败";
+                    }
                 }
             }
             return ret;
@@ -681,13 +713,21 @@ namespace NFine.Web.Areas.Games
                 app.SubmitForm(log, string.Empty);
 
                 //积分操作
-                if (LB2LoveBird("4", userID, log.F_Score.ToString()))
+                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                 {
-                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                    Response.End();
                 }
                 else
                 {
-                    ret = "网络错误，赠送积分失败";
+                    if (LB2LoveBird("4", userID, log.F_Score.ToString()))
+                    {
+                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    }
+                    else
+                    {
+                        ret = "网络错误，赠送积分失败";
+                    }
                 }
             }
             else if (result == "lost")//输了
@@ -823,13 +863,21 @@ namespace NFine.Web.Areas.Games
                 app.SubmitForm(log, string.Empty);
 
                 //积分操作
-                if (LB2LoveBird("5", userID, log.F_Score.ToString()))
+                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                 {
-                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                    Response.End();
                 }
                 else
                 {
-                    ret = "网络错误，赠送积分失败";
+                    if (LB2LoveBird("5", userID, log.F_Score.ToString()))
+                    {
+                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    }
+                    else
+                    {
+                        ret = "网络错误，赠送积分失败";
+                    }
                 }
             }
             else
@@ -994,12 +1042,12 @@ namespace NFine.Web.Areas.Games
             if (count < LostLevel1 && count >= LostLevel2)
             {
                 isWin = false;
-                score = int.Parse(setting["LostLevel2"]["LostScore"].ToString());
+                score = int.Parse(setting["LostLevel1"]["LostScore"].ToString());
             }
             else if (count < LostLevel2)
             {
                 isWin = false;
-                score = int.Parse(setting["LostLevel1"]["LostScore"].ToString());
+                score = int.Parse(setting["LostLevel2"]["LostScore"].ToString());
             }
 
             //计算税收
@@ -1024,7 +1072,7 @@ namespace NFine.Web.Areas.Games
                 log.F_LogTime = DateTime.Now;
                 log.F_LogType = 0;
                 log.F_LogFlag = 0;
-                log.F_Remark = "疯狂算术题赢了" + log.F_Score + "积分,答对了" + count + "道题";
+                log.F_Remark = "疯狂算术题赢了" + log.F_Score + "积分,答对了" + count + "道题,扣除税金" + log.F_Tax + "个";
                 log.F_MarkTime = DateTime.Now;
                 log.F_CreatorUserId = "system";
                 log.F_CreatorTime = DateTime.Now;
@@ -1036,13 +1084,21 @@ namespace NFine.Web.Areas.Games
                 app.SubmitForm(log, string.Empty);
 
                 //积分操作
-                if (LB2LoveBird("6", userID, log.F_Score.ToString()))
+                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                 {
-                    ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                    Response.End();
                 }
                 else
                 {
-                    ret = "网络错误，赠送积分失败";
+                    if (LB2LoveBird("6", userID, log.F_Score.ToString()))
+                    {
+                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                    }
+                    else
+                    {
+                        ret = "网络错误，赠送积分失败";
+                    }
                 }
             }
             else //输了

@@ -30,8 +30,8 @@ namespace NFine.Application.TGame
                 obj = new IndexTopReport();
                 string sql1 = "select count(distinct F_LogNo) from [T_GameLog]";
                 string sql2 = "select count(distinct F_LogNo) from [T_GameLog]  where  DateDiff(dd,F_LogTime,getdate())=0  ";
-                string sql3 = "select sum(F_Score) from [dbo].[T_GameLog]  where F_CoinType=2 and F_WinOrLost=2";
-                string sql4 = "select sum(F_Score) from [dbo].[T_GameLog]  where F_CoinType=1 and F_WinOrLost=2";
+                string sql3 = "select sum(F_Score) from [dbo].[T_GameLog]  where F_CoinType=2";
+                string sql4 = "select sum(F_Score) from [dbo].[T_GameLog]  where F_CoinType=2 and F_WinOrLost=1";
 
                 Object objPlayerAllCount = SqlHelper.ExecuteScalar(System.Data.CommandType.Text, sql1, null).ToString();
                 int PlayerAllCount = 0;

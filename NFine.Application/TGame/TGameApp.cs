@@ -23,7 +23,7 @@ namespace NFine.Application.TGame
     public class TGameApp
     {
 		private ITGameRepository service = new TGameRepository();
-
+        string PersonGameMaxLoveBird = System.Configuration.ConfigurationManager.AppSettings["PersonGameMaxLoveBird"].ToString();
 
         #region 游戏描述
 
@@ -57,25 +57,25 @@ namespace NFine.Application.TGame
                 switch (gameName)
                 {
                     case "se":
-                    e.GameDesc = GAME_SE_DESC;
+                    e.GameDesc = GAME_SE_DESC+",当前游戏每日赢得LoveBird积分限额"+ PersonGameMaxLoveBird + "个.";
                     e.ScoreRuleDesc = string.Format("看看你有多色游戏，至少要有{0}LB积分才能玩哦！一个LB积分等于{1}游戏积分，赢家将被按百分之{2}的税率收取税金.开始游戏需要扣除{3}LB积分作为进场费用。"+
                         " 游戏得分规则:如果你的分数比你的历史最高分高，那就多出那一部分分数按照跟LB积分的比例兑换后，扣除税率然后换成等比的LoveBird积分充值到你钱包账户。"+
                         " 游戏扣分规则：如果你的分数比你的历史最高分低，那分差部分按照LB积分的兑换比例兑换后，直接扣除相应的LB积分数量。", json["LowestPlayLB"], json["LBRatio"], tax,json["PlayLBPay"]);
                         break;
                     case "XXK":
-                    e.GameDesc = GAME_XXK_DESC;
+                    e.GameDesc = GAME_XXK_DESC + ",当前游戏每日赢得LoveBird积分限额" + PersonGameMaxLoveBird + "个."; 
                     e.ScoreRuleDesc = string.Format("消消看游戏，最低的进场LB积分门槛是{0}积分,一个LB积分等于{1}游戏积分，赢家将被按百分之{2}的税率收取税金.开始此游戏需要扣除{3}LB积分作为进场费用。"+
                         " 游戏得分规则:如果你的分数比你的历史最高分高，那就多出那一部分分数按照跟LB积分的比例兑换后，扣除税率然后换成等比的LoveBird积分充值到你钱包账户。"+
                         "游戏扣分规则：如果你的分数比你的历史最高分低，那分差部分按照LB积分的兑换比例兑换后，直接扣除相应的LB积分数量。 ", json["LowestPlayLB"], json["LBRatio"], tax, json["PlayLBPay"]);
                         break;
                     case "saolei":
-                    e.GameDesc = GAME_SAOLEI_DESC;
+                    e.GameDesc = GAME_SAOLEI_DESC + ",当前游戏每日赢得LoveBird积分限额" + PersonGameMaxLoveBird + "个.";
                     e.ScoreRuleDesc = string.Format("扫雷游戏，最低的进场LB积分门槛是{0}积分,赢家将被按百分之{1}的税率收取税金，输了将被扣除{2}个LB积分,{3}秒内扫雷成功，"+
                         " 将获得{4}个LoveBird积分，{5}秒内扫雷成功，将获得{6}个LoveBird积分，{7}秒内扫雷成功，将获得{8}个LoveBird积分。开始此游戏需要扣除{9}LB积分作为进场费用。"+
                         " ", json["LowestPlayLB"], tax, json["LostScore"], json["Rule1"]["Times"], json["Rule1"]["Score"], json["Rule2"]["Times"], json["Rule2"]["Score"], json["Rule3"]["Times"], json["Rule3"]["Score"], json["PlayLBPay"]);
                         break;
                     case "mspt":
-                    e.GameDesc = GAME_MSPT_DESC;
+                    e.GameDesc = GAME_MSPT_DESC + ",当前游戏每日赢得LoveBird积分限额" + PersonGameMaxLoveBird + "个.";
                     e.ScoreRuleDesc = string.Format("美女拼图游戏,最低入场的LB积分门槛是{0}积分，赢家将被按百分之{1}的税率收取税金," +
                             "全通关将获取{2}个LB积分," +
                             " 通{3}关获得{4}个LoveBird积分,输了扣除{5}个LB积分," +
@@ -103,7 +103,7 @@ namespace NFine.Application.TGame
                             );
                         break;
                     case "sst":
-                    e.GameDesc = GAME_SST_DESC;
+                    e.GameDesc = GAME_SST_DESC + ",当前游戏每日赢得LoveBird积分限额" + PersonGameMaxLoveBird + "个.";
                     e.ScoreRuleDesc = string.Format("疯狂算术题游戏,最低入场的LB积分门槛是{0}积分，赢家将被按百分之{1}的税率收取税金," +
                             "做对{2}题，奖励LoveBird积分{3}个，" +
                             "做对{4}题，奖励LoveBird积分{5}个，" +

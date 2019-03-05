@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Maticsoft.DBUtility;
+using Newtonsoft.Json.Linq;
 using NFine.Application.TGame;
 using NFine.Code;
 using NFine.Domain._03_Entity.T_Game.GameSetting;
@@ -13,6 +14,34 @@ namespace NFine.Application
 {
     public class CommonTools
     {
+        /// <summary>
+        /// 查询当日账户限额
+        /// </summary>
+        /// <param name="LBAccount"></param>
+        /// <returns></returns>
+        public static bool CalcPersonGameMaxLoveBird(string LBAccount)
+        {
+            bool isTrue = false;
+            string beginTime = DateTime.Now.ToShortDateString() + " 00:00:00";
+            string endTime = DateTime.Now.ToShortDateString() + " 23:59:59";
+            string sql = "select SUM(F_Score) from dbo.T_GameLog where F_WinOrLost=1 and F_LBAccount='"+ LBAccount + "' "+
+                            " and F_LogTime> '"+ beginTime + "' and F_LogTime< '"+ endTime + "'";
+
+            object resultObj = SqlHelper.ExecuteScalar(System.Data.CommandType.Text, sql, null);
+            double result = resultObj == null ? 0 : (double)resultObj;
+
+            double PersonGameMaxLoveBird = double.Parse(System.Configuration.ConfigurationManager.AppSettings["PersonGameMaxLoveBird"].ToString());
+            if (result > PersonGameMaxLoveBird)//如果超额了，就返回真
+            {
+                isTrue = true;
+            }
+            return isTrue;
+        }
+
+       
+
+
+
         /// <summary>
         /// 判断玩家是否持有足够的币来玩游戏
         /// </summary>
@@ -38,6 +67,8 @@ namespace NFine.Application
         /// <returns>游戏名称，如：“王者荣耀”</returns>
         public static bool GiveCoinToPlayer(string userId,string comeSum,string type,string gameName)
         {
+
+
             string url = System.Configuration.ConfigurationManager.AppSettings["ModifyRemainingIntegral"].ToString();
             string parm = "userId=" + userId + "&comeSum=" + comeSum + "&type=" + type + "&gameName="+gameName;
             string responseString = HttpMethods.HttpPost(url, parm);
