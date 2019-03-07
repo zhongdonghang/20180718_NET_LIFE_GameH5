@@ -2,6 +2,7 @@
 using NFine.Application;
 using NFine.Application.TGame;
 using NFine.Application.TGameLog;
+using NFine.Code;
 using NFine.Domain._03_Entity.T_Game.GameSetting;
 using NFine.Domain.Entity.TGame;
 using NFine.Domain.Entity.TGameLog;
@@ -217,67 +218,146 @@ namespace NFine.Web.Areas.Games
 
         public string SeResultHandle()
         {
-            if (Session["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
             string ret = "";
 
-            string currentScore = Request.Params["score"];//本次游戏的分数
-            string LBAccount = Session["loginID"].ToString();
-            string userID = Session["userID"].ToString();
-
-            //先判断玩家是否是第一次玩
-            TGameLogApp app = new TGameLogApp();
-
-            ///从数据库获取游戏设置
-            TGameEntity entity = gameApp.GetForm("2");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-            int F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
-            double maxScore = app.GetMaxScoreByAccount(LBAccount, F_CoinType, "se");
-
-            if (app.GetGameLogByAccount(LBAccount, "se"))//不是第一次玩
+            try
             {
-                //取出历史最高分的记录
-                
-                //跟当前分数比，大于等于最高分，视为赢，赠送相应的积分,否则视为输
-                if (double.Parse(currentScore) >= maxScore)//大于等于历史最高分，win
+                CheckUserLoginState();
+                string currentScore = Request.Params["score"];//本次游戏的分数
+                string LBAccount = Session["loginID"].ToString();
+                string userID = Session["userID"].ToString();
+
+                //先判断玩家是否是第一次玩
+                TGameLogApp app = new TGameLogApp();
+
+                ///从数据库获取游戏设置
+                TGameEntity entity = gameApp.GetForm("2");
+                JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
+                int F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
+                double maxScore = app.GetMaxScoreByAccount(LBAccount, F_CoinType, "se");
+
+                if (app.GetGameLogByAccount(LBAccount, "se"))//不是第一次玩
                 {
-                    //写入记录，赠送积分
+                    //取出历史最高分的记录
+
+                    //跟当前分数比，大于等于最高分，视为赢，赠送相应的积分,否则视为输
+                    if (double.Parse(currentScore) >= maxScore)//大于等于历史最高分，win
+                    {
+                        //写入记录，赠送积分
+                        TGameLogEntity log = new TGameLogEntity();
+                        log.F_Id = Guid.NewGuid().ToString();
+                        log.F_LBAccount = LBAccount;
+                        log.F_LogNo = userID;
+                        log.F_GameNo = "se";
+
+                        double resultScore = double.Parse(currentScore) - maxScore; //计算实际得的游戏分
+                        double Tax = double.Parse(setting["Tax"].ToString());//取出税率
+                                                                             //按兑换比例计算实际得分（LB或者LoveBird）
+                        double tmpLifeScore = CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting);//原始得分
+                        log.F_Score = (int)(tmpLifeScore - ((double)tmpLifeScore * Tax)); //扣税得分
+                        log.F_Tax = ((double)tmpLifeScore * Tax); //税金
+                        log.F_GameScore = int.Parse(currentScore);
+
+                        log.F_CoinType = F_CoinType;
+                        log.F_WinOrLost = 1;
+                        log.F_LogState = 0;
+                        log.F_LogTime = DateTime.Now;
+                        log.F_LogType = 0;
+                        log.F_LogFlag = 0;
+                        log.F_Remark = "玩游戏得分" + log.F_GameScore;
+                        log.F_MarkTime = DateTime.Now;
+                        log.F_CreatorUserId = "system";
+                        log.F_CreatorTime = DateTime.Now;
+                        log.F_DeleteMark = false;
+                        log.F_DeleteUserId = "";
+                        log.F_DeleteTime = null;
+                        log.F_LastModifyUserId = "";
+                        log.F_LastModifyTime = null;
+
+                        app.SubmitForm(log, string.Empty);
+
+                        if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
+                        {
+                            Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                            Response.End();
+                        }
+                        else
+                        {
+                            //积分操作
+                            if (LB2LoveBird("2", userID, log.F_Score.ToString()))
+                            {
+                                ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                            }
+                            else
+                            {
+                                ret = "网络错误，赠送积分失败";
+                            }
+                        }
+                    }
+                    else //Lost
+                    {
+                        TGameLogEntity log = new TGameLogEntity();
+                        log.F_Id = Guid.NewGuid().ToString();
+                        log.F_LBAccount = LBAccount;
+                        log.F_LogNo = userID;
+                        log.F_GameNo = "se";
+                        double resultScore = maxScore - double.Parse(currentScore);
+                        log.F_Score = (int)CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting);
+                        log.F_GameScore = int.Parse(currentScore);
+                        log.F_CoinType = F_CoinType;
+                        log.F_WinOrLost = 2;
+                        log.F_LogState = 0;
+                        log.F_LogTime = DateTime.Now;
+                        log.F_LogType = 0;
+                        log.F_LogFlag = 0;
+                        log.F_Tax = 0;
+                        double tmp = double.Parse(currentScore) - maxScore;
+                        log.F_Remark = "玩游戏得分" + log.F_GameScore + ",游戏输了,和最高分相差" + tmp;
+                        log.F_MarkTime = DateTime.Now;
+                        log.F_CreatorUserId = "system";
+                        log.F_CreatorTime = DateTime.Now;
+                        log.F_DeleteMark = false;
+                        log.F_DeleteUserId = "";
+                        log.F_DeleteTime = null;
+                        log.F_LastModifyUserId = "";
+                        log.F_LastModifyTime = null;
+                        app.SubmitForm(log, string.Empty);
+                        if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                        {
+                            ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个，你和历史最高分相差了" + tmp + "个";
+                        }
+                        else
+                        {
+                            ret = "网络错误，扣除积分失败";
+                        }
+                    }
+                }
+                else//第一次玩
+                {
+                    //写入记录，肯定是赢，赠送积分
                     TGameLogEntity log = new TGameLogEntity();
                     log.F_Id = Guid.NewGuid().ToString();
                     log.F_LBAccount = LBAccount;
                     log.F_LogNo = userID;
                     log.F_GameNo = "se";
 
-                    double resultScore = double.Parse(currentScore) - maxScore; //计算实际得的游戏分
-                    double Tax = double.Parse(setting["Tax"].ToString());//取出税率
+                    //计算税收
+                    double Tax = double.Parse(setting["Tax"].ToString());
                     //按兑换比例计算实际得分（LB或者LoveBird）
-                    double tmpLifeScore = CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting);//原始得分
-                    log.F_Score = (int)(tmpLifeScore - ((double)tmpLifeScore * Tax)); //扣税得分
+                    int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
+                    log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
                     log.F_Tax = ((double)tmpLifeScore * Tax); //税金
-                    log.F_GameScore = int.Parse(currentScore);
 
+                    log.F_GameScore = int.Parse(currentScore);
                     log.F_CoinType = F_CoinType;
                     log.F_WinOrLost = 1;
                     log.F_LogState = 0;
                     log.F_LogTime = DateTime.Now;
                     log.F_LogType = 0;
                     log.F_LogFlag = 0;
-                    log.F_Remark = "玩游戏得分" + log.F_GameScore;
+                    log.F_Remark = "第一次玩游戏，赢得积分" + log.F_GameScore;
                     log.F_MarkTime = DateTime.Now;
                     log.F_CreatorUserId = "system";
                     log.F_CreatorTime = DateTime.Now;
@@ -286,17 +366,15 @@ namespace NFine.Web.Areas.Games
                     log.F_DeleteTime = null;
                     log.F_LastModifyUserId = "";
                     log.F_LastModifyTime = null;
-
                     app.SubmitForm(log, string.Empty);
 
                     if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                     {
-                        Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度["+ PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                        Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
                         Response.End();
                     }
                     else
                     {
-                        //积分操作
                         if (LB2LoveBird("2", userID, log.F_Score.ToString()))
                         {
                             ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
@@ -307,94 +385,11 @@ namespace NFine.Web.Areas.Games
                         }
                     }
                 }
-                else //Lost
-                {
-                    TGameLogEntity log = new TGameLogEntity();
-                    log.F_Id = Guid.NewGuid().ToString();
-                    log.F_LBAccount = LBAccount;
-                    log.F_LogNo = userID;
-                    log.F_GameNo = "se";
-                    double resultScore = maxScore - double.Parse(currentScore);
-                    log.F_Score = (int)CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting);
-                    log.F_GameScore = int.Parse(currentScore);
-                    log.F_CoinType = F_CoinType;
-                    log.F_WinOrLost = 2;
-                    log.F_LogState = 0;
-                    log.F_LogTime = DateTime.Now;
-                    log.F_LogType = 0;
-                    log.F_LogFlag = 0;
-                    log.F_Tax = 0;
-                    double tmp = double.Parse(currentScore) - maxScore;
-                    log.F_Remark = "玩游戏得分" + log.F_GameScore + ",游戏输了,和最高分相差" + tmp;
-                    log.F_MarkTime = DateTime.Now;
-                    log.F_CreatorUserId = "system";
-                    log.F_CreatorTime = DateTime.Now;
-                    log.F_DeleteMark = false;
-                    log.F_DeleteUserId = "";
-                    log.F_DeleteTime = null;
-                    log.F_LastModifyUserId = "";
-                    log.F_LastModifyTime = null;
-                    app.SubmitForm(log, string.Empty);
-                    if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
-                    {
-                        ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个，你和历史最高分相差了" + tmp + "个";
-                    }
-                    else
-                    {
-                        ret = "网络错误，扣除积分失败";
-                    }
-                }
             }
-            else//第一次玩
+            catch (Exception ex)
             {
-                //写入记录，肯定是赢，赠送积分
-                TGameLogEntity log = new TGameLogEntity();
-                log.F_Id = Guid.NewGuid().ToString();
-                log.F_LBAccount = LBAccount;
-                log.F_LogNo = userID;
-                log.F_GameNo = "se";
-
-                //计算税收
-                double Tax = double.Parse(setting["Tax"].ToString());
-                //按兑换比例计算实际得分（LB或者LoveBird）
-                int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
-                log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
-                log.F_Tax = ((double)tmpLifeScore * Tax); //税金
-
-                log.F_GameScore = int.Parse(currentScore);
-                log.F_CoinType = F_CoinType;
-                log.F_WinOrLost = 1;
-                log.F_LogState = 0;
-                log.F_LogTime = DateTime.Now;
-                log.F_LogType = 0;
-                log.F_LogFlag = 0;
-                log.F_Remark = "第一次玩游戏，赢得积分" + log.F_GameScore;
-                log.F_MarkTime = DateTime.Now;
-                log.F_CreatorUserId = "system";
-                log.F_CreatorTime = DateTime.Now;
-                log.F_DeleteMark = false;
-                log.F_DeleteUserId = "";
-                log.F_DeleteTime = null;
-                log.F_LastModifyUserId = "";
-                log.F_LastModifyTime = null;
-                app.SubmitForm(log, string.Empty);
-
-                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
-                    Response.End();
-                }
-                else
-                {
-                    if (LB2LoveBird("2", userID, log.F_Score.ToString()))
-                    {
-                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
-                    }
-                    else
-                    {
-                        ret = "网络错误，赠送积分失败";
-                    }
-                }
+                WriteLog.Write(ex.ToString());
+                ret = "网络出现问题，请刷新再玩！";
             }
             return ret;
         }
@@ -422,43 +417,127 @@ namespace NFine.Web.Areas.Games
 
         public string XXKResultHandle()
         {
-            if (Session["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
             string ret = "";
-            string currentScore = Request.Params["score"];//本次游戏的分数
-            string LBAccount = Session["loginID"].ToString();
-            string userID = Session["userID"].ToString();
-
-            //先判断玩家是否是第一次玩
-            TGameLogApp app = new TGameLogApp();
-            ///从数据库获取游戏设置
-            TGameEntity entity = gameApp.GetForm("3");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-
-            int F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
-            if (app.GetGameLogByAccount(LBAccount, "XXK"))//不是第一次玩
+            try
             {
-                //取出历史最高分的记录
-                double maxScore = app.GetMaxScoreByAccount(LBAccount, F_CoinType, "XXK");
-                //跟当前分数比，大于等于最高分，视为赢，赠送相应的积分,否则视为输
-                if (double.Parse(currentScore) >= maxScore)//大于等于历史最高分，win
+                CheckUserLoginState();
+                string currentScore = Request.Params["score"];//本次游戏的分数
+                string LBAccount = Session["loginID"].ToString();
+                string userID = Session["userID"].ToString();
+
+                //先判断玩家是否是第一次玩
+                TGameLogApp app = new TGameLogApp();
+                ///从数据库获取游戏设置
+                TGameEntity entity = gameApp.GetForm("3");
+                JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
+
+                int F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
+                if (app.GetGameLogByAccount(LBAccount, "XXK"))//不是第一次玩
                 {
-                    //写入记录，赠送积分
+                    //取出历史最高分的记录
+                    double maxScore = app.GetMaxScoreByAccount(LBAccount, F_CoinType, "XXK");
+                    //跟当前分数比，大于等于最高分，视为赢，赠送相应的积分,否则视为输
+                    if (double.Parse(currentScore) >= maxScore)//大于等于历史最高分，win
+                    {
+                        //写入记录，赠送积分
+                        TGameLogEntity log = new TGameLogEntity();
+                        log.F_Id = Guid.NewGuid().ToString();
+                        log.F_LBAccount = LBAccount;
+                        log.F_LogNo = userID;
+                        log.F_GameNo = "XXK";
+
+                        //计算税收
+                        double Tax = double.Parse(setting["Tax"].ToString());
+
+                        double resultScore = double.Parse(currentScore) - maxScore;
+
+                        int tmpLifeScore = (int)CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting);//原始得分
+
+                        log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
+                        log.F_Tax = ((double)tmpLifeScore * Tax); //税金
+                        log.F_GameScore = int.Parse(currentScore);
+                        log.F_CoinType = F_CoinType;
+                        log.F_WinOrLost = 1;
+                        log.F_LogState = 0;
+                        log.F_LogTime = DateTime.Now;
+                        log.F_LogType = 0;
+                        log.F_LogFlag = 0;
+                        log.F_Remark = "玩游戏得分" + log.F_GameScore;
+                        log.F_MarkTime = DateTime.Now;
+                        log.F_CreatorUserId = "system";
+                        log.F_CreatorTime = DateTime.Now;
+                        log.F_DeleteMark = false;
+                        log.F_DeleteUserId = "";
+                        log.F_DeleteTime = null;
+                        log.F_LastModifyUserId = "";
+                        log.F_LastModifyTime = null;
+                        app.SubmitForm(log, string.Empty);
+
+                        //积分操作
+                        if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
+                        {
+                            Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                            Response.End();
+                        }
+                        else
+                        {
+                            if (LB2LoveBird("3", userID, log.F_Score.ToString()))
+                            {
+                                ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                            }
+                            else
+                            {
+                                ret = "网络错误，赠送积分失败";
+                            }
+                        }
+                    }
+                    else //Lost
+                    {
+                        TGameLogEntity log = new TGameLogEntity();
+                        log.F_Id = Guid.NewGuid().ToString();
+                        log.F_LBAccount = LBAccount;
+                        log.F_LogNo = userID;
+                        log.F_GameNo = "XXK";
+
+                        double resultScore = maxScore - double.Parse(currentScore);
+                        log.F_Score = (int)CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting); //int.Parse(currentScore);
+                        log.F_GameScore = int.Parse(currentScore);
+                        log.F_CoinType = F_CoinType;
+                        log.F_WinOrLost = 2;
+                        log.F_LogState = 0;
+                        log.F_LogTime = DateTime.Now;
+                        log.F_LogType = 0;
+                        log.F_LogFlag = 0;
+                        log.F_Tax = 0;
+                        double tmp = double.Parse(currentScore) - maxScore;
+                        log.F_Remark = "玩游戏得分" + log.F_GameScore + ",游戏输了,和最高分相差" + tmp;
+                        log.F_MarkTime = DateTime.Now;
+                        log.F_CreatorUserId = "system";
+                        log.F_CreatorTime = DateTime.Now;
+                        log.F_DeleteMark = false;
+                        log.F_DeleteUserId = "";
+                        log.F_DeleteTime = null;
+                        log.F_LastModifyUserId = "";
+                        log.F_LastModifyTime = null;
+                        app.SubmitForm(log, string.Empty);
+
+
+                        if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                        {
+                            ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个，你和历史最高分相差了" + tmp + "个";
+                        }
+                        else
+                        {
+                            ret = "网络错误，扣除积分失败";
+                        }
+
+                    }
+                }
+                else//第一次玩
+                {
+                    //写入记录，肯定是赢，赠送积分
                     TGameLogEntity log = new TGameLogEntity();
                     log.F_Id = Guid.NewGuid().ToString();
                     log.F_LBAccount = LBAccount;
@@ -467,11 +546,8 @@ namespace NFine.Web.Areas.Games
 
                     //计算税收
                     double Tax = double.Parse(setting["Tax"].ToString());
-
-                    double resultScore = double.Parse(currentScore) - maxScore;
-
-                    int tmpLifeScore = (int)CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting);//原始得分
-
+                    //按兑换比例计算实际得分（LB或者LoveBird）
+                    int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
                     log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
                     log.F_Tax = ((double)tmpLifeScore * Tax); //税金
                     log.F_GameScore = int.Parse(currentScore);
@@ -481,7 +557,7 @@ namespace NFine.Web.Areas.Games
                     log.F_LogTime = DateTime.Now;
                     log.F_LogType = 0;
                     log.F_LogFlag = 0;
-                    log.F_Remark = "玩游戏得分" + log.F_GameScore;
+                    log.F_Remark = "第一次玩游戏，赢得积分" + log.F_GameScore;
                     log.F_MarkTime = DateTime.Now;
                     log.F_CreatorUserId = "system";
                     log.F_CreatorTime = DateTime.Now;
@@ -491,6 +567,7 @@ namespace NFine.Web.Areas.Games
                     log.F_LastModifyUserId = "";
                     log.F_LastModifyTime = null;
                     app.SubmitForm(log, string.Empty);
+
 
                     //积分操作
                     if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
@@ -510,99 +587,11 @@ namespace NFine.Web.Areas.Games
                         }
                     }
                 }
-                else //Lost
-                {
-                    TGameLogEntity log = new TGameLogEntity();
-                    log.F_Id = Guid.NewGuid().ToString();
-                    log.F_LBAccount = LBAccount;
-                    log.F_LogNo = userID;
-                    log.F_GameNo = "XXK";
-
-                    double resultScore = maxScore - double.Parse(currentScore); 
-                    log.F_Score = (int)CommonTools.GameScore2LifeScore((int)resultScore, F_CoinType, setting); //int.Parse(currentScore);
-                    log.F_GameScore = int.Parse(currentScore);
-                    log.F_CoinType = F_CoinType;
-                    log.F_WinOrLost = 2;
-                    log.F_LogState = 0;
-                    log.F_LogTime = DateTime.Now;
-                    log.F_LogType = 0;
-                    log.F_LogFlag = 0;
-                    log.F_Tax = 0;
-                    double tmp = double.Parse(currentScore) - maxScore;
-                    log.F_Remark = "玩游戏得分" + log.F_GameScore + ",游戏输了,和最高分相差" + tmp;
-                    log.F_MarkTime = DateTime.Now;
-                    log.F_CreatorUserId = "system";
-                    log.F_CreatorTime = DateTime.Now;
-                    log.F_DeleteMark = false;
-                    log.F_DeleteUserId = "";
-                    log.F_DeleteTime = null;
-                    log.F_LastModifyUserId = "";
-                    log.F_LastModifyTime = null;
-                    app.SubmitForm(log, string.Empty);
-
-
-                    if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
-                    {
-                        ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个，你和历史最高分相差了" + tmp + "个";
-                    }
-                    else
-                    {
-                        ret = "网络错误，扣除积分失败";
-                    }
-
-                }
             }
-            else//第一次玩
+            catch (Exception ex)
             {
-                //写入记录，肯定是赢，赠送积分
-                TGameLogEntity log = new TGameLogEntity();
-                log.F_Id = Guid.NewGuid().ToString();
-                log.F_LBAccount = LBAccount;
-                log.F_LogNo = userID;
-                log.F_GameNo = "XXK";
-
-                //计算税收
-                double Tax = double.Parse(setting["Tax"].ToString());
-                //按兑换比例计算实际得分（LB或者LoveBird）
-                int tmpLifeScore = (int)CommonTools.GameScore2LifeScore(int.Parse(currentScore), F_CoinType, setting);//原始得分
-                log.F_Score = tmpLifeScore - (int)((double)tmpLifeScore * Tax); //扣税得分
-                log.F_Tax = ((double)tmpLifeScore * Tax); //税金
-                log.F_GameScore = int.Parse(currentScore);
-                log.F_CoinType = F_CoinType;
-                log.F_WinOrLost = 1;
-                log.F_LogState = 0;
-                log.F_LogTime = DateTime.Now;
-                log.F_LogType = 0;
-                log.F_LogFlag = 0;
-                log.F_Remark = "第一次玩游戏，赢得积分" + log.F_GameScore;
-                log.F_MarkTime = DateTime.Now;
-                log.F_CreatorUserId = "system";
-                log.F_CreatorTime = DateTime.Now;
-                log.F_DeleteMark = false;
-                log.F_DeleteUserId = "";
-                log.F_DeleteTime = null;
-                log.F_LastModifyUserId = "";
-                log.F_LastModifyTime = null;
-                app.SubmitForm(log, string.Empty);
-
-
-                //积分操作
-                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
-                {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
-                    Response.End();
-                }
-                else
-                {
-                    if (LB2LoveBird("3", userID, log.F_Score.ToString()))
-                    {
-                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
-                    }
-                    else
-                    {
-                        ret = "网络错误，赠送积分失败";
-                    }
-                }
+                WriteLog.Write(ex.ToString());
+                ret = "网络出现问题，请刷新再玩！";
             }
             return ret;
         }
@@ -630,144 +619,140 @@ namespace NFine.Web.Areas.Games
 
         public string SaoLeiResultHandle()
         {
-            if (Session["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
             string ret = "";
-            string LBAccount = Session["loginID"].ToString();
-            string userID = Session["userID"].ToString();
 
-            string result = Request["result"].Trim().ToLower();
-            string times = "0";
-
-            TGameLogApp app = new TGameLogApp();
-
-            ///从数据库获取游戏设置
-            TGameEntity entity = gameApp.GetForm("4");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-
-            //积分类型
-            int F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
-
-            if (result == "win")//赢了
+            try
             {
-                times = Request["times"].Trim();
-                double timeSeconds = double.Parse(times);
-                timeSeconds /= 1000;
-                int RuleScore = 0;
-                if (timeSeconds <= double.Parse(setting["Rule1"]["Times"].ToString()))//第一级别
-                {
-                    RuleScore = int.Parse(setting["Rule1"]["Score"].ToString());
-                }
-                else if (timeSeconds <= double.Parse(setting["Rule2"]["Times"].ToString()))//第二级别
-                {
-                    RuleScore = int.Parse(setting["Rule2"]["Score"].ToString());
-                }
-                else if (timeSeconds <= double.Parse(setting["Rule3"]["Times"].ToString()))//第三级别
-                {
-                    RuleScore = int.Parse(setting["Rule3"]["Score"].ToString());
-                }
-                //写入记录，赠送积分
-                TGameLogEntity log = new TGameLogEntity();
-                log.F_Id = Guid.NewGuid().ToString();
-                log.F_LBAccount = LBAccount;
-                log.F_LogNo = userID;
-                log.F_GameNo = "saolei";
+                CheckUserLoginState();
 
-                //计算税收
-                double Tax = double.Parse(setting["Tax"].ToString());
+                string LBAccount = Session["loginID"].ToString();
+                string userID = Session["userID"].ToString();
 
-                //按兑换比例计算实际得分（LB或者LoveBird）
-                log.F_Score = RuleScore - (int)((double)RuleScore * Tax); //扣税得分
-                log.F_Tax = ((double)RuleScore * Tax); //税金
-                log.F_GameScore = RuleScore;
-                log.F_CoinType = F_CoinType;
-                log.F_WinOrLost = 1;
-                log.F_LogState = 0;
-                log.F_LogTime = DateTime.Now;
-                log.F_LogType = 0;
-                log.F_LogFlag = 0;
-                log.F_Remark = "扫雷赢了" + log.F_Score + "积分,用时" + timeSeconds + "秒";
-                log.F_MarkTime = DateTime.Now;
-                log.F_CreatorUserId = "system";
-                log.F_CreatorTime = DateTime.Now;
-                log.F_DeleteMark = false;
-                log.F_DeleteUserId = "";
-                log.F_DeleteTime = null;
-                log.F_LastModifyUserId = "";
-                log.F_LastModifyTime = null;
-                app.SubmitForm(log, string.Empty);
+                string result = Request["result"].Trim().ToLower();
+                string times = "0";
 
-                //积分操作
-                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
+                TGameLogApp app = new TGameLogApp();
+
+                ///从数据库获取游戏设置
+                TGameEntity entity = gameApp.GetForm("4");
+                JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
+
+                //积分类型
+                int F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
+
+                if (result == "win")//赢了
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
-                    Response.End();
-                }
-                else
-                {
-                    if (LB2LoveBird("4", userID, log.F_Score.ToString()))
+                    times = Request["times"].Trim();
+                    double timeSeconds = double.Parse(times);
+                    timeSeconds /= 1000;
+                    int RuleScore = 0;
+                    if (timeSeconds <= double.Parse(setting["Rule1"]["Times"].ToString()))//第一级别
                     {
-                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        RuleScore = int.Parse(setting["Rule1"]["Score"].ToString());
+                    }
+                    else if (timeSeconds <= double.Parse(setting["Rule2"]["Times"].ToString()))//第二级别
+                    {
+                        RuleScore = int.Parse(setting["Rule2"]["Score"].ToString());
+                    }
+                    else if (timeSeconds <= double.Parse(setting["Rule3"]["Times"].ToString()))//第三级别
+                    {
+                        RuleScore = int.Parse(setting["Rule3"]["Score"].ToString());
+                    }
+                    //写入记录，赠送积分
+                    TGameLogEntity log = new TGameLogEntity();
+                    log.F_Id = Guid.NewGuid().ToString();
+                    log.F_LBAccount = LBAccount;
+                    log.F_LogNo = userID;
+                    log.F_GameNo = "saolei";
+
+                    //计算税收
+                    double Tax = double.Parse(setting["Tax"].ToString());
+
+                    //按兑换比例计算实际得分（LB或者LoveBird）
+                    log.F_Score = RuleScore - (int)((double)RuleScore * Tax); //扣税得分
+                    log.F_Tax = ((double)RuleScore * Tax); //税金
+                    log.F_GameScore = RuleScore;
+                    log.F_CoinType = F_CoinType;
+                    log.F_WinOrLost = 1;
+                    log.F_LogState = 0;
+                    log.F_LogTime = DateTime.Now;
+                    log.F_LogType = 0;
+                    log.F_LogFlag = 0;
+                    log.F_Remark = "扫雷赢了" + log.F_Score + "积分,用时" + timeSeconds + "秒";
+                    log.F_MarkTime = DateTime.Now;
+                    log.F_CreatorUserId = "system";
+                    log.F_CreatorTime = DateTime.Now;
+                    log.F_DeleteMark = false;
+                    log.F_DeleteUserId = "";
+                    log.F_DeleteTime = null;
+                    log.F_LastModifyUserId = "";
+                    log.F_LastModifyTime = null;
+                    app.SubmitForm(log, string.Empty);
+
+                    //积分操作
+                    if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
+                    {
+                        Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                        Response.End();
                     }
                     else
                     {
-                        ret = "网络错误，赠送积分失败";
+                        if (LB2LoveBird("4", userID, log.F_Score.ToString()))
+                        {
+                            ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        }
+                        else
+                        {
+                            ret = "网络错误，赠送积分失败";
+                        }
+                    }
+                }
+                else if (result == "lost")//输了
+                {
+
+                    //写入记录，赠送积分
+                    TGameLogEntity log = new TGameLogEntity();
+                    log.F_Id = Guid.NewGuid().ToString();
+                    log.F_LBAccount = LBAccount;
+                    log.F_LogNo = userID;
+                    log.F_GameNo = "saolei";
+                    //按兑换比例计算实际得分（LB或者LoveBird）
+                    log.F_Score = int.Parse(setting["LostScore"].ToString());
+                    log.F_Tax = 0; //税金
+                    log.F_GameScore = int.Parse(setting["LostScore"].ToString());
+                    log.F_CoinType = F_CoinType;
+                    log.F_WinOrLost = 2;
+                    log.F_LogState = 0;
+                    log.F_LogTime = DateTime.Now;
+                    log.F_LogType = 0;
+                    log.F_LogFlag = 0;
+                    log.F_Remark = "扫雷输了扣除" + log.F_Score + "积分";
+                    log.F_MarkTime = DateTime.Now;
+                    log.F_CreatorUserId = "system";
+                    log.F_CreatorTime = DateTime.Now;
+                    log.F_DeleteMark = false;
+                    log.F_DeleteUserId = "";
+                    log.F_DeleteTime = null;
+                    log.F_LastModifyUserId = "";
+                    log.F_LastModifyTime = null;
+                    app.SubmitForm(log, string.Empty);
+
+                    if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                    {
+                        ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                    }
+                    else
+                    {
+                        ret = "网络错误，扣除积分失败";
                     }
                 }
             }
-            else if (result == "lost")//输了
+            catch (Exception ex)
             {
-
-                //写入记录，赠送积分
-                TGameLogEntity log = new TGameLogEntity();
-                log.F_Id = Guid.NewGuid().ToString();
-                log.F_LBAccount = LBAccount;
-                log.F_LogNo = userID;
-                log.F_GameNo = "saolei";
-                //按兑换比例计算实际得分（LB或者LoveBird）
-                log.F_Score = int.Parse(setting["LostScore"].ToString());
-                log.F_Tax = 0; //税金
-                log.F_GameScore = int.Parse(setting["LostScore"].ToString());
-                log.F_CoinType = F_CoinType;
-                log.F_WinOrLost = 2;
-                log.F_LogState = 0;
-                log.F_LogTime = DateTime.Now;
-                log.F_LogType = 0;
-                log.F_LogFlag = 0;
-                log.F_Remark = "扫雷输了扣除" + log.F_Score + "积分";
-                log.F_MarkTime = DateTime.Now;
-                log.F_CreatorUserId = "system";
-                log.F_CreatorTime = DateTime.Now;
-                log.F_DeleteMark = false;
-                log.F_DeleteUserId = "";
-                log.F_DeleteTime = null;
-                log.F_LastModifyUserId = "";
-                log.F_LastModifyTime = null;
-                app.SubmitForm(log, string.Empty);
-
-                if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
-                {
-                    ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
-                }
-                else
-                {
-                    ret = "网络错误，扣除积分失败";
-                }
+                WriteLog.Write(ex.ToString());
+                ret = "网络出现问题，请刷新再玩！";
             }
             return ret;
         }
@@ -795,130 +780,126 @@ namespace NFine.Web.Areas.Games
 
         public string MNResultHandle()
         {
-            if (Session["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
             string ret = "";
-            string LBAccount = Session["loginID"].ToString();
-            string userID = Session["userID"].ToString();
-
-            string result = Request["result"].Trim().ToLower();
-
-            TGameLogApp app = new TGameLogApp();
-            ///从数据库获取游戏设置
-            TGameEntity entity = gameApp.GetForm("5");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-            string level = Request["level"].Trim();
-            //积分类型
-            int F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
-
-            if (result == "win")//赢了
+            try
             {
-                int gameLevel = int.Parse(level);
-                int score = GetMNGameScore(gameLevel, true, setting);
 
-                //写入记录，赠送积分
-                TGameLogEntity log = new TGameLogEntity();
-                log.F_Id = Guid.NewGuid().ToString();
-                log.F_LBAccount = LBAccount;
-                log.F_LogNo = userID;
-                log.F_GameNo = "mspt";
+                CheckUserLoginState();
 
-                //计算税收
-                double Tax = double.Parse(setting["Tax"].ToString());
+                string LBAccount = Session["loginID"].ToString();
+                string userID = Session["userID"].ToString();
 
-                //按兑换比例计算实际得分（LB或者LoveBird）
-                log.F_Score = score - (int)((double)score * Tax); //扣税得分
-                log.F_Tax = ((double)score * Tax); //税金
-                log.F_GameScore = score;
-                log.F_CoinType = F_CoinType;
-                log.F_WinOrLost = 1;
-                log.F_LogState = 0;
-                log.F_LogTime = DateTime.Now;
-                log.F_LogType = 0;
-                log.F_LogFlag = 0;
-                log.F_Remark = "美女拼图赢了" + log.F_Score + "积分,关数为第" + gameLevel + "关";
-                log.F_MarkTime = DateTime.Now;
-                log.F_CreatorUserId = "system";
-                log.F_CreatorTime = DateTime.Now;
-                log.F_DeleteMark = false;
-                log.F_DeleteUserId = "";
-                log.F_DeleteTime = null;
-                log.F_LastModifyUserId = "";
-                log.F_LastModifyTime = null;
-                app.SubmitForm(log, string.Empty);
+                string result = Request["result"].Trim().ToLower();
 
-                //积分操作
-                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
+                TGameLogApp app = new TGameLogApp();
+                ///从数据库获取游戏设置
+                TGameEntity entity = gameApp.GetForm("5");
+                JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
+                string level = Request["level"].Trim();
+                //积分类型
+                int F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
+
+                if (result == "win")//赢了
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
-                    Response.End();
-                }
-                else
-                {
-                    if (LB2LoveBird("5", userID, log.F_Score.ToString()))
+                    int gameLevel = int.Parse(level);
+                    int score = GetMNGameScore(gameLevel, true, setting);
+
+                    //写入记录，赠送积分
+                    TGameLogEntity log = new TGameLogEntity();
+                    log.F_Id = Guid.NewGuid().ToString();
+                    log.F_LBAccount = LBAccount;
+                    log.F_LogNo = userID;
+                    log.F_GameNo = "mspt";
+
+                    //计算税收
+                    double Tax = double.Parse(setting["Tax"].ToString());
+
+                    //按兑换比例计算实际得分（LB或者LoveBird）
+                    log.F_Score = score - (int)((double)score * Tax); //扣税得分
+                    log.F_Tax = ((double)score * Tax); //税金
+                    log.F_GameScore = score;
+                    log.F_CoinType = F_CoinType;
+                    log.F_WinOrLost = 1;
+                    log.F_LogState = 0;
+                    log.F_LogTime = DateTime.Now;
+                    log.F_LogType = 0;
+                    log.F_LogFlag = 0;
+                    log.F_Remark = "美女拼图赢了" + log.F_Score + "积分,关数为第" + gameLevel + "关";
+                    log.F_MarkTime = DateTime.Now;
+                    log.F_CreatorUserId = "system";
+                    log.F_CreatorTime = DateTime.Now;
+                    log.F_DeleteMark = false;
+                    log.F_DeleteUserId = "";
+                    log.F_DeleteTime = null;
+                    log.F_LastModifyUserId = "";
+                    log.F_LastModifyTime = null;
+                    app.SubmitForm(log, string.Empty);
+
+                    //积分操作
+                    if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                     {
-                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                        Response.End();
                     }
                     else
                     {
-                        ret = "网络错误，赠送积分失败";
+                        if (LB2LoveBird("5", userID, log.F_Score.ToString()))
+                        {
+                            ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        }
+                        else
+                        {
+                            ret = "网络错误，赠送积分失败";
+                        }
                     }
-                }
-            }
-            else
-            {
-                int gameLevel = int.Parse(level);
-                int score = GetMNGameScore(gameLevel, false, setting);
-                //写入记录
-                TGameLogEntity log = new TGameLogEntity();
-                log.F_Id = Guid.NewGuid().ToString();
-                log.F_LBAccount = LBAccount;
-                log.F_LogNo = userID;
-                log.F_GameNo = "mspt";
-                //按兑换比例计算实际得分（LB或者LoveBird）
-                log.F_Score = score;
-                log.F_Tax = 0; //税金
-                log.F_GameScore = score;
-                log.F_CoinType = F_CoinType;
-                log.F_WinOrLost = 2;
-                log.F_LogState = 0;
-                log.F_LogTime = DateTime.Now;
-                log.F_LogType = 0;
-                log.F_LogFlag = 0;
-                log.F_Remark = "美女拼图在第"+ gameLevel + "关输了,扣除" + log.F_Score + "积分";
-                log.F_MarkTime = DateTime.Now;
-                log.F_CreatorUserId = "system";
-                log.F_CreatorTime = DateTime.Now;
-                log.F_DeleteMark = false;
-                log.F_DeleteUserId = "";
-                log.F_DeleteTime = null;
-                log.F_LastModifyUserId = "";
-                log.F_LastModifyTime = null;
-                app.SubmitForm(log, string.Empty);
-
-                if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
-                {
-                    ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
                 }
                 else
                 {
-                    ret = "网络错误，扣除积分失败";
+                    int gameLevel = int.Parse(level);
+                    int score = GetMNGameScore(gameLevel, false, setting);
+                    //写入记录
+                    TGameLogEntity log = new TGameLogEntity();
+                    log.F_Id = Guid.NewGuid().ToString();
+                    log.F_LBAccount = LBAccount;
+                    log.F_LogNo = userID;
+                    log.F_GameNo = "mspt";
+                    //按兑换比例计算实际得分（LB或者LoveBird）
+                    log.F_Score = score;
+                    log.F_Tax = 0; //税金
+                    log.F_GameScore = score;
+                    log.F_CoinType = F_CoinType;
+                    log.F_WinOrLost = 2;
+                    log.F_LogState = 0;
+                    log.F_LogTime = DateTime.Now;
+                    log.F_LogType = 0;
+                    log.F_LogFlag = 0;
+                    log.F_Remark = "美女拼图在第" + gameLevel + "关输了,扣除" + log.F_Score + "积分";
+                    log.F_MarkTime = DateTime.Now;
+                    log.F_CreatorUserId = "system";
+                    log.F_CreatorTime = DateTime.Now;
+                    log.F_DeleteMark = false;
+                    log.F_DeleteUserId = "";
+                    log.F_DeleteTime = null;
+                    log.F_LastModifyUserId = "";
+                    log.F_LastModifyTime = null;
+                    app.SubmitForm(log, string.Empty);
+
+                    if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                    {
+                        ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                    }
+                    else
+                    {
+                        ret = "网络错误，扣除积分失败";
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                WriteLog.Write(ex.ToString());
+                ret = "网络出现问题，请刷新再玩！";
             }
             return ret;
         }
@@ -986,159 +967,149 @@ namespace NFine.Web.Areas.Games
 
         public string SSTResultHandle()
         {
-            if (Session["loginID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["userID"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
-            if (Session["LBOrLoveBird"] == null)
-            {
-                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
-                Response.End();
-            }
             string ret = "";
-            string LBAccount = Session["loginID"].ToString();
-            string userID = Session["userID"].ToString();
 
-            string result = Request["gameResult"].Trim().ToLower();
-
-            TGameLogApp app = new TGameLogApp();
-
-            ///从数据库获取游戏设置
-            TGameEntity entity = gameApp.GetForm("6");
-            JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-
-            //积分类型
-            int F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
-            if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
-
-            //计算游戏应得分数
-            int count = int.Parse(result);
-
-            int winLevel1 = int.Parse(setting["WinLevel1"]["WinCount"].ToString());
-            int winLevel2 = int.Parse(setting["WinLevel2"]["WinCount"].ToString());
-            int LostLevel1 = int.Parse(setting["LostLevel1"]["LostCount"].ToString());
-            int LostLevel2 = int.Parse(setting["LostLevel2"]["LostCount"].ToString());
-
-            bool isWin = false;
-            int score = 0;
-            if (count >= winLevel1)
+            try
             {
-                isWin = true;
-                score = int.Parse(setting["WinLevel1"]["WinScore"].ToString());
-            }
-            else if (count >= winLevel2 && count < winLevel1)
-            {
-                isWin = true;
-                score = int.Parse(setting["WinLevel2"]["WinScore"].ToString());
-            }
+                CheckUserLoginState();
 
-            if (count < LostLevel1 && count >= LostLevel2)
-            {
-                isWin = false;
-                score = int.Parse(setting["LostLevel1"]["LostScore"].ToString());
-            }
-            else if (count < LostLevel2)
-            {
-                isWin = false;
-                score = int.Parse(setting["LostLevel2"]["LostScore"].ToString());
-            }
+                string LBAccount = Session["loginID"].ToString();
+                string userID = Session["userID"].ToString();
+                string result = Request["gameResult"].Trim().ToLower();
+                TGameLogApp app = new TGameLogApp();
+                ///从数据库获取游戏设置
+                TGameEntity entity = gameApp.GetForm("6");
+                JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
+                //积分类型
+                int F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LB") F_CoinType = 2;
+                if (Session["LBOrLoveBird"].ToString() == "LoveBird") F_CoinType = 1;
+                //计算游戏应得分数
+                int count = int.Parse(result);
+                int winLevel1 = int.Parse(setting["WinLevel1"]["WinCount"].ToString());
+                int winLevel2 = int.Parse(setting["WinLevel2"]["WinCount"].ToString());
+                int LostLevel1 = int.Parse(setting["LostLevel1"]["LostCount"].ToString());
+                int LostLevel2 = int.Parse(setting["LostLevel2"]["LostCount"].ToString());
 
-            //计算税收
-
-            if (isWin)
-            {
-                //写入记录，赠送积分
-                TGameLogEntity log = new TGameLogEntity();
-                log.F_Id = Guid.NewGuid().ToString();
-                log.F_LBAccount = LBAccount;
-                log.F_LogNo = userID;
-                log.F_GameNo = "sst";
-
-                double Tax = double.Parse(setting["Tax"].ToString());
-                //按兑换比例计算实际得分（LB或者LoveBird）
-                log.F_Score = score - (int)((double)score * Tax); //扣税得分
-                log.F_Tax = ((double)score * Tax); //税金
-                log.F_GameScore = count;
-                log.F_CoinType = F_CoinType;
-                log.F_WinOrLost = 1;
-                log.F_LogState = 0;
-                log.F_LogTime = DateTime.Now;
-                log.F_LogType = 0;
-                log.F_LogFlag = 0;
-                log.F_Remark = "疯狂算术题赢了" + log.F_Score + "积分,答对了" + count + "道题,扣除税金" + log.F_Tax + "个";
-                log.F_MarkTime = DateTime.Now;
-                log.F_CreatorUserId = "system";
-                log.F_CreatorTime = DateTime.Now;
-                log.F_DeleteMark = false;
-                log.F_DeleteUserId = "";
-                log.F_DeleteTime = null;
-                log.F_LastModifyUserId = "";
-                log.F_LastModifyTime = null;
-                app.SubmitForm(log, string.Empty);
-
-                //积分操作
-                if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
+                bool isWin = false;
+                int score = 0;
+                if (count >= winLevel1)
                 {
-                    Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
-                    Response.End();
+                    isWin = true;
+                    score = int.Parse(setting["WinLevel1"]["WinScore"].ToString());
                 }
-                else
+                else if (count >= winLevel2 && count < winLevel1)
                 {
-                    if (LB2LoveBird("6", userID, log.F_Score.ToString()))
+                    isWin = true;
+                    score = int.Parse(setting["WinLevel2"]["WinScore"].ToString());
+                }
+
+                if (count < LostLevel1 && count >= LostLevel2)
+                {
+                    isWin = false;
+                    score = int.Parse(setting["LostLevel1"]["LostScore"].ToString());
+                }
+                else if (count < LostLevel2)
+                {
+                    isWin = false;
+                    score = int.Parse(setting["LostLevel2"]["LostScore"].ToString());
+                }
+
+                //计算税收
+
+                if (isWin)
+                {
+                    //写入记录，赠送积分
+                    TGameLogEntity log = new TGameLogEntity();
+                    log.F_Id = Guid.NewGuid().ToString();
+                    log.F_LBAccount = LBAccount;
+                    log.F_LogNo = userID;
+                    log.F_GameNo = "sst";
+
+                    double Tax = double.Parse(setting["Tax"].ToString());
+                    //按兑换比例计算实际得分（LB或者LoveBird）
+                    log.F_Score = score - (int)((double)score * Tax); //扣税得分
+                    log.F_Tax = ((double)score * Tax); //税金
+                    log.F_GameScore = count;
+                    log.F_CoinType = F_CoinType;
+                    log.F_WinOrLost = 1;
+                    log.F_LogState = 0;
+                    log.F_LogTime = DateTime.Now;
+                    log.F_LogType = 0;
+                    log.F_LogFlag = 0;
+                    log.F_Remark = "疯狂算术题赢了" + log.F_Score + "积分,答对了" + count + "道题,扣除税金" + log.F_Tax + "个";
+                    log.F_MarkTime = DateTime.Now;
+                    log.F_CreatorUserId = "system";
+                    log.F_CreatorTime = DateTime.Now;
+                    log.F_DeleteMark = false;
+                    log.F_DeleteUserId = "";
+                    log.F_DeleteTime = null;
+                    log.F_LastModifyUserId = "";
+                    log.F_LastModifyTime = null;
+                    app.SubmitForm(log, string.Empty);
+
+                    //积分操作
+                    if (CommonTools.CalcPersonGameMaxLoveBird(LBAccount))//超额
                     {
-                        ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        Response.Write("<html><head><title>系统提示</title><script>alert('您当日赢的LoveBird积分数量已经超过系统限制额度[" + PersonGameMaxLoveBird + "]LoveBird积分，请明日再来!');</script></head><body></body></html>");
+                        Response.End();
                     }
                     else
                     {
-                        ret = "网络错误，赠送积分失败";
+                        if (LB2LoveBird("6", userID, log.F_Score.ToString()))
+                        {
+                            ret = "你赢了，你的LoveBird积分增加了" + log.F_Score.ToString() + "个！";
+                        }
+                        else
+                        {
+                            ret = "网络错误，赠送积分失败";
+                        }
+                    }
+                }
+                else //输了
+                {
+
+                    //写入记录，赠送积分
+                    TGameLogEntity log = new TGameLogEntity();
+                    log.F_Id = Guid.NewGuid().ToString();
+                    log.F_LBAccount = LBAccount;
+                    log.F_LogNo = userID;
+                    log.F_GameNo = "sst";
+                    //按兑换比例计算实际得分（LB或者LoveBird）
+                    log.F_Score = score;
+                    log.F_Tax = 0; //税金
+                    log.F_GameScore = count;
+                    log.F_CoinType = F_CoinType;
+                    log.F_WinOrLost = 2;
+                    log.F_LogState = 0;
+                    log.F_LogTime = DateTime.Now;
+                    log.F_LogType = 0;
+                    log.F_LogFlag = 0;
+                    log.F_Remark = "疯狂算术题输了扣除" + log.F_Score + "积分,共答对了" + count + "道题";
+                    log.F_MarkTime = DateTime.Now;
+                    log.F_CreatorUserId = "system";
+                    log.F_CreatorTime = DateTime.Now;
+                    log.F_DeleteMark = false;
+                    log.F_DeleteUserId = "";
+                    log.F_DeleteTime = null;
+                    log.F_LastModifyUserId = "";
+                    log.F_LastModifyTime = null;
+                    app.SubmitForm(log, string.Empty);
+
+                    if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
+                    {
+                        ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
+                    }
+                    else
+                    {
+                        ret = "网络错误，扣除积分失败";
                     }
                 }
             }
-            else //输了
+            catch (Exception ex)
             {
-
-                //写入记录，赠送积分
-                TGameLogEntity log = new TGameLogEntity();
-                log.F_Id = Guid.NewGuid().ToString();
-                log.F_LBAccount = LBAccount;
-                log.F_LogNo = userID;
-                log.F_GameNo = "sst";
-                //按兑换比例计算实际得分（LB或者LoveBird）
-                log.F_Score = score;
-                log.F_Tax = 0; //税金
-                log.F_GameScore = count;
-                log.F_CoinType = F_CoinType;
-                log.F_WinOrLost = 2;
-                log.F_LogState = 0;
-                log.F_LogTime = DateTime.Now;
-                log.F_LogType = 0;
-                log.F_LogFlag = 0;
-                log.F_Remark = "疯狂算术题输了扣除" + log.F_Score + "积分,共答对了"+count+"道题";
-                log.F_MarkTime = DateTime.Now;
-                log.F_CreatorUserId = "system";
-                log.F_CreatorTime = DateTime.Now;
-                log.F_DeleteMark = false;
-                log.F_DeleteUserId = "";
-                log.F_DeleteTime = null;
-                log.F_LastModifyUserId = "";
-                log.F_LastModifyTime = null;
-                app.SubmitForm(log, string.Empty);
-
-                if (CommonTools.GiveCoinToPlayer(userID, "-" + log.F_Score.ToString(), F_CoinType.ToString(), setting["GameName"].ToString()))
-                {
-                    ret = "你输了！扣除" + Session["LBOrLoveBird"].ToString() + "积分" + log.F_Score + "个";
-                }
-                else
-                {
-                    ret = "网络错误，扣除积分失败";
-                }
+                WriteLog.Write(ex.ToString());
+                ret = "网络出现问题，请刷新再玩！";
             }
             return ret;
         }

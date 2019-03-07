@@ -28,7 +28,7 @@ namespace NFine.Application
                             " and F_LogTime> '"+ beginTime + "' and F_LogTime< '"+ endTime + "'";
 
             object resultObj = SqlHelper.ExecuteScalar(System.Data.CommandType.Text, sql, null);
-            double result = resultObj == null ? 0 : (double)resultObj;
+            double result = resultObj == null ? 0 : double.Parse(resultObj.ToString());
 
             double PersonGameMaxLoveBird = double.Parse(System.Configuration.ConfigurationManager.AppSettings["PersonGameMaxLoveBird"].ToString());
             if (result > PersonGameMaxLoveBird)//如果超额了，就返回真

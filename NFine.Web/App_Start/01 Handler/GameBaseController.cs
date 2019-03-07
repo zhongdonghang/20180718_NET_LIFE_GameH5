@@ -27,15 +27,24 @@ namespace NFine.Web.App_Start._01_Handler
             if (gameNo == "6") gameName = "H5-疯狂算术";
 
             bool isTrue = false;
-            //减积分
-            if (CommonTools.GiveCoinToPlayer(userId, "-" + comeSum, "2", gameName))
+
+            if (comeSum.Trim() != "0")
             {
-                //增加积分
-                if (CommonTools.GiveCoinToPlayer(userId, comeSum, "1", gameName))
+                //减积分
+                if (CommonTools.GiveCoinToPlayer(userId, "-" + comeSum, "2", gameName))
                 {
-                    isTrue = true;
+                    //增加积分
+                    if (CommonTools.GiveCoinToPlayer(userId, comeSum, "1", gameName))
+                    {
+                        isTrue = true;
+                    }
                 }
             }
+            else
+            {
+                isTrue = true;
+            }
+
             return isTrue;
         }
 
@@ -142,6 +151,28 @@ namespace NFine.Web.App_Start._01_Handler
             else if (string.IsNullOrEmpty(Request.Params["userID"]))
             {
                 Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+        }
+
+        /// <summary>
+        /// 检查登录状态
+        /// </summary>
+        public void CheckUserLoginState()
+        {
+            if (Session["loginID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('请先登录');</script></head><body></body></html>");
+                Response.End();
+            }
+            if (Session["userID"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
+                Response.End();
+            }
+            if (Session["LBOrLoveBird"] == null)
+            {
+                Response.Write("<html><head><title>系统提示</title><script>alert('登录超时，请重新登录进入游戏');</script></head><body></body></html>");
                 Response.End();
             }
         }
