@@ -209,7 +209,7 @@ namespace NFine.Web.Areas.Games
             Session["userID"] = Request.Params["userID"];
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
             //判断是不是有足够币来进行游戏
-            base.IsEnoughScoreToPlay("2");
+            base.IsEnoughScoreToPlay("2", Session["userID"].ToString());
 
             //扣除入场分
             PayScoreForBeginGame("2", Session["userID"].ToString());
@@ -385,12 +385,14 @@ namespace NFine.Web.Areas.Games
                         }
                     }
                 }
+                base.IsEnoughScoreToPlay("2", userID);
             }
             catch (Exception ex)
             {
                 WriteLog.Write(ex.ToString());
                 ret = "网络出现问题，请刷新再玩！";
             }
+           
             return ret;
         }
 
@@ -409,7 +411,7 @@ namespace NFine.Web.Areas.Games
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
 
             //判断是不是有足够币来进行游戏
-            base.IsEnoughScoreToPlay("3");
+            base.IsEnoughScoreToPlay("3", Session["userID"].ToString());
             //扣除入场分
             PayScoreForBeginGame("3", Session["userID"].ToString());
             return new RedirectResult("/GameContent/xxk1000/index.html");
@@ -587,12 +589,14 @@ namespace NFine.Web.Areas.Games
                         }
                     }
                 }
+                base.IsEnoughScoreToPlay("3",userID);
             }
             catch (Exception ex)
             {
                 WriteLog.Write(ex.ToString());
                 ret = "网络出现问题，请刷新再玩！";
             }
+          
             return ret;
         }
 
@@ -611,7 +615,7 @@ namespace NFine.Web.Areas.Games
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
 
             //判断是不是有足够币来进行游戏
-            base.IsEnoughScoreToPlay("4");
+            base.IsEnoughScoreToPlay("4", Session["userID"].ToString());
             //扣除入场分
             PayScoreForBeginGame("4", Session["userID"].ToString());
             return new RedirectResult("/GameContent/saolei/index.html");
@@ -748,12 +752,14 @@ namespace NFine.Web.Areas.Games
                         ret = "网络错误，扣除积分失败";
                     }
                 }
+                base.IsEnoughScoreToPlay("4",userID);
             }
             catch (Exception ex)
             {
                 WriteLog.Write(ex.ToString());
                 ret = "网络出现问题，请刷新再玩！";
             }
+          
             return ret;
         }
 
@@ -772,7 +778,7 @@ namespace NFine.Web.Areas.Games
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
 
             //判断是不是有足够币来进行游戏
-            base.IsEnoughScoreToPlay("5");
+            base.IsEnoughScoreToPlay("5", Session["userID"].ToString());
             //扣除入场分
             PayScoreForBeginGame("5", Session["userID"].ToString());
             return new RedirectResult("/GameContent/mspt/index.html");
@@ -895,12 +901,14 @@ namespace NFine.Web.Areas.Games
                         ret = "网络错误，扣除积分失败";
                     }
                 }
+                base.IsEnoughScoreToPlay("5",userID);
             }
             catch (Exception ex)
             {
                 WriteLog.Write(ex.ToString());
                 ret = "网络出现问题，请刷新再玩！";
             }
+         
             return ret;
         }
 
@@ -959,7 +967,7 @@ namespace NFine.Web.Areas.Games
             Session["userID"] = Request.Params["userID"];
             Session["LBOrLoveBird"] = Request.Params["LBOrLoveBird"];
             //判断是不是有足够币来进行游戏
-            base.IsEnoughScoreToPlay("6");
+            base.IsEnoughScoreToPlay("6", Session["userID"].ToString());
             //扣除入场分
             PayScoreForBeginGame("6", Session["userID"].ToString());
             return new RedirectResult("/GameContent/sst/index.html");
@@ -1105,12 +1113,14 @@ namespace NFine.Web.Areas.Games
                         ret = "网络错误，扣除积分失败";
                     }
                 }
+                base.IsEnoughScoreToPlay("6",userID);
             }
             catch (Exception ex)
             {
                 WriteLog.Write(ex.ToString());
                 ret = "网络出现问题，请刷新再玩！";
             }
+            
             return ret;
         }
 

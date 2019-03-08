@@ -59,16 +59,15 @@ namespace NFine.Web.App_Start._01_Handler
             string gameName = "";
             string comeSum = "";
             string type = "";
-            if (gameNo == "2") gameName = "H5-看你有多色";
-            if (gameNo == "3") gameName = "H5-消消看";
-            if (gameNo == "4") gameName = "H5-扫雷";
-            if (gameNo == "5") gameName = "H5-美女拼图";
-            if (gameNo == "6") gameName = "H5-疯狂算术";
-
             TGameApp gameApp = new TGameApp();
             TGameEntity entity = gameApp.GetForm(gameNo);
             JObject setting = NFine.Code.Json.ToJObject(entity.F_Setting);
-            comeSum = "-"+setting["PlayLBPay"].ToString().Trim();
+            comeSum = "-" + setting["PlayLBPay"].ToString().Trim();
+            if (gameNo == "2") gameName = "H5-看你有多色-扣除入场分"+comeSum;
+            if (gameNo == "3") gameName = "H5-消消看-扣除入场分" + comeSum;
+            if (gameNo == "4") gameName = "H5-扫雷-扣除入场分" + comeSum;
+            if (gameNo == "5") gameName = "H5-美女拼图-扣除入场分" + comeSum;
+            if (gameNo == "6") gameName = "H5-疯狂算术-扣除入场分" + comeSum;
             type = "2";
 
             if (!CommonTools.GiveCoinToPlayer(userId, comeSum, type, gameName))
@@ -82,7 +81,7 @@ namespace NFine.Web.App_Start._01_Handler
         /// 判断是否有足够的积分来玩游戏
         /// </summary>
         /// <param name="gameNo"></param>
-        public void IsEnoughScoreToPlay(string gameNo)
+        public bool IsEnoughScoreToPlay(string gameNo,string userID)
         {
             TGameApp gameApp = new TGameApp();
 
@@ -92,7 +91,7 @@ namespace NFine.Web.App_Start._01_Handler
             bool isTrue = false;
             if (Session["LBOrLoveBird"].ToString() == "LB")//用LB进行游戏
             {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), Request.Params["userID"], "2");
+                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLB"].ToString(), userID, "2");
                 if (!isTrue)
                 {
                     Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLB"].ToString() + "个,请充值'); history.go(-1);</script></head><body></body></html>");
@@ -101,7 +100,7 @@ namespace NFine.Web.App_Start._01_Handler
             }
             else
             {
-                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), Request.Params["userID"], "1");
+                isTrue = CommonTools.CheckPlayerCoinToGame(setting["LowestPlayLoveBird"].ToString(), userID, "1");
                 if (!isTrue)
                 {
                     Response.Write("<html><head><title>系统提示</title><script>alert('您的" + Session["LBOrLoveBird"] + "积分余额不足，至少需要" + setting["LowestPlayLoveBird"].ToString() + "个,请充值');history.go(-1);</script></head><body></body></html>");
@@ -109,6 +108,7 @@ namespace NFine.Web.App_Start._01_Handler
                 }
             }
 
+            return isTrue;
         }
 
         /// <summary>
