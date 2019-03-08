@@ -243,7 +243,7 @@ namespace NFine.Web.Areas.Games
                     //取出历史最高分的记录
 
                     //跟当前分数比，大于等于最高分，视为赢，赠送相应的积分,否则视为输
-                    if (double.Parse(currentScore) >= maxScore)//大于等于历史最高分，win
+                    if (double.Parse(currentScore) > maxScore)//大于等于历史最高分，win
                     {
                         //写入记录，赠送积分
                         TGameLogEntity log = new TGameLogEntity();
