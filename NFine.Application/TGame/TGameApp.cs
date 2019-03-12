@@ -47,7 +47,9 @@ namespace NFine.Application.TGame
                 e.MeBestScore = objMeBestScore == null ? "ÔÝÎÞ" : objMeBestScore.ToString();
 
                 object objAllPlayerCount = SqlHelper.ExecuteScalar(System.Data.CommandType.Text, sqlAllPlayerCount, null);
-                e.AllPlayerCount = objAllPlayerCount == null ? "ÔÝÎÞ" : objAllPlayerCount.ToString();
+                e.AllPlayerCount = objAllPlayerCount == null ? "ÔÝÎÞ" : (int.Parse( objAllPlayerCount.ToString())*100).ToString();
+
+             //   e.AllPlayerCount = (int.Parse(e.AllPlayerCount) * 100).ToString();
 
                 string sqlGame = "select F_Setting from T_Game where F_EName='" + gameName + "'";
                 string setting = SqlHelper.ExecuteScalar(System.Data.CommandType.Text, sqlGame, null).ToString();
